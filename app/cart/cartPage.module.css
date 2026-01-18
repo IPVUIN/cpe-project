@@ -1,0 +1,125 @@
+.container {
+
+  overflow: hidden;
+  padding: 20px;
+}
+.menu_incart {
+  background-color: white;
+  display: flex;
+  border-radius: 10px;
+  margin: 10px 0;
+  padding: 10px;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+.image_menu {
+  width: 80px;
+  height: 80px;
+}
+.menu_from{
+  color: gray;
+}
+.menu_text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: 20px;
+  margin-top: 1px;
+}
+.menu_text h3 {
+  display: inline;
+}
+.menu_price {
+  color: rgb(0, 180, 0);
+  margin-top: 7px;
+  font-weight: bold;
+}
+.add {
+  margin-right: 15px;
+  margin-left: auto;
+  display: flex;
+  background-color: #f8fafc;
+  padding: 5px;
+  border-radius: 7px;
+  font-weight: bold;
+  transition: all 0.1s ease;
+}
+.add:hover {
+  background-color: #e7ebf0;
+}
+.add button {
+  width: 30px;
+  height: 30px;
+  border: solid 0px;
+  cursor: pointer;
+  border-radius: 7px;
+  background-color: white;
+  transition: all 0.1s ease;
+}
+.add button:hover {
+  background-color: rgb(156, 156, 156);
+  color: white;
+}
+.add div {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.totallist {
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+.total {
+  display: flex;
+  justify-content: space-between;
+  font-size: 24px;
+  font-weight: bold;
+}
+.checkout {
+  margin-top: 20px;
+}
+.checkout button {
+  width: 100%;
+  border: solid 0px;
+  cursor: pointer;
+  padding: 20px 0px;
+  font-size: 24px;
+  font-weight: bold;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgb(0, 85, 165,0.2);
+  background-color: #59a4ff;
+  color: white;
+  transition: all 0.2s ease;
+}
+.checkout button:hover {
+  background-color: #2983f1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.nomenu{
+  color: gray;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+  font-size: 26px;
+  font-weight: bold;
+}
+.cardimage {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  overflow: hidden;
+  border-radius: 15px;
+}
+
+.imagemenu {
+  border-radius: 15px;
+  object-fit: cover;
+  transition: all 0.2s ease;
+}

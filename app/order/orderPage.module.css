@@ -1,0 +1,107 @@
+.container {
+  overflow: hidden;
+  padding: 20px;
+}
+
+.head h1 {
+  margin-bottom: 10px;
+}
+.head span {
+  color: gray;
+}
+.order {
+  border-radius: 10px;
+  margin-top: 15px;
+}
+.order a {
+  color: black;
+}
+.order_card {
+  background-color: white;
+  border-radius: 15px;
+  margin-bottom: 15px;
+  padding: 10px 15px;
+  position: relative;
+  display: flex;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+.order_card:hover {
+  background-color: rgb(248, 248, 248);
+}
+.order_card h3 {
+  margin: 0;
+  font-size: 24px;
+  display: inline;
+  margin-right: 20px;
+}
+.divimage {
+  position: relative;
+  width: 90px;
+  height: 90px;
+}
+.image {
+  object-fit: cover;
+  border-radius: 15px;
+}
+.order_card_text {
+  margin-left: 15px;
+  width: 100%;
+}
+.order_card_text h4 {
+  margin: 0;
+  font-size: 18px;
+}
+.order_card_text span {
+  color: gray;
+  font-size: 14px;
+}
+.order_card_head {
+  display: flex;
+  justify-content: space-between;
+}
+.order_card_menus {
+  background-color: #f8fafc;
+  padding: 5px;
+  border-radius: 10px;
+}
+.order_card_menus span {
+  color: black;
+}
+.order_card_price {
+  padding: 5px 0;
+  color: green;
+  font-size: 18px;
+}
+
+.order_status {
+  padding: 5px;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: bold;
+  height: fit-content;
+}
+.pending {
+  background-color: #cce5ff;
+  color: #004085;
+}
+
+.cooking {
+  background-color: #ffd19d;
+  color: rgb(231, 129, 12);
+}
+
+.finished {
+  background-color: #11be39;
+  color: #155724;
+}
+
+.nomenu {
+  color: gray;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+  font-size: 26px;
+  font-weight: bold;
+}

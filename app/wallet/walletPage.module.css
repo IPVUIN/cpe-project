@@ -1,0 +1,107 @@
+.container {
+  overflow: hidden;
+  padding: 20px;
+}
+
+.profile {
+  background-color: #3b72b2;
+  padding: 20px;
+  color: white;
+  border-radius: 25px;
+  box-shadow: 0 2px 8px rgba(95, 153, 204, 0.15);
+}
+
+.balance {
+  margin-bottom: 30px;
+}
+.balance span {
+  color: rgb(197, 197, 197);
+}
+.balance h1 {
+  margin: 0;
+}
+.uid {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 18x;
+}
+.studentid {
+  background-color: rgb(95, 153, 204);
+  color: white;
+  padding: 7px;
+  border-radius: 20px;
+  font-weight: bold;
+}
+.quicktopup {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.topup {
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 18px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border: solid 2px white;
+  transition: all 0.1s ease;
+}
+.topup:hover {
+  border: solid 2px #3b72b2;
+  color: #3b72b2;
+  cursor: pointer;
+}
+.history_card {
+  background-color: white;
+  display: flex;
+  padding: 15px;
+  border-radius: 20px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+.divimage{
+  position: relative;width: 80px;height: 80px;
+}
+.image {
+  background-color: #3b72b2;
+  object-fit: cover;
+  border-radius: 10px;
+  
+}
+.history_text {
+  margin-left: 15px;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+}
+.history_text h3 {
+  margin: 0;
+}
+.history_amount {
+  font-weight: bold;
+  color: red;
+  font-size: 20px;
+}
+.history_name { 
+  display: flex;
+  flex-direction: column;
+}
+.history_name span{
+  color: gray;
+}
+.notran{
+     color: gray;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+  font-size: 26px;
+  font-weight: bold;
+}
