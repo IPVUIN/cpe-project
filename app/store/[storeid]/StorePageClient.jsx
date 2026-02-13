@@ -15,50 +15,135 @@ export default function StorePageClient({ store, menus }) {
       setUser(data.user);
     });
   }, []);
-
-  const [cart, setCart] = useState([]);
-  useEffect(() => {
-    if (!user) return;
-
-    const savedCart = localStorage.getItem(`cart_${user.id}`);
-    if (savedCart) {
-      setCart(JSON.parse(savedCart));
+  console.log(store.id);
+  async function addToOrder(menuId, price) {
+    const { data: orderCart, error: orderCartError } = await supabase
+      .from("orders")
+      .select("id")
+      .eq("user_id", user.id)
+      .eq("status", "cart")
+      .maybeSingle();
+    console.log("orderCart :  ", orderCart);
+    if (orderCartError) {
+      alert(orderCartError.message);
+      return;
     }
-  }, [user]);
 
-  function addToCart(menu) {
-    if (!user) return;
+    let orderId = orderCart?.id;
 
-    setCart((prev) => {
-      const found = prev.find((item) => item.id === menu.id);
+    if (!orderId) {
+      const { data: newOrder, error: newOrderError } = await supabase
+        .from("orders")
+        .insert({
+          user_id: user.id,
+          store_id: store.id,
+          status: "cart",
+          total_price: price,
+        })
+        .select("id")
+        .single();
+      if (newOrderError) {
+        alert(newOrderError.message);
+        return;
+      }
 
-      const updatedCart = found
-        ? prev.map((item) =>
-            item.id === menu.id ? { ...item, qty: item.qty + 1 } : item
-          )
-        : [...prev, { ...menu, store_name: store.name, qty: 1 }];
+      orderId = newOrder.id;
+    }
+    console.log("newOrder : ", orderId);
+    const { data: newMenu, error: newMenuError } = await supabase
+      .from("menus")
+      .select("store_id")
+      .eq("id", menuId)
+      .single();
+    if (newMenuError) {
+      alert(newMenuError.message);
+      return;
+    }
+    console.log("NEWMENU:", newMenu);
+    //  console.log("store:", newOrder);
+    const { data: storeIdOrder, error: storeIdOrderError } = await supabase
+      .from("orders")
+      .select("store_id")
+      .eq("id", orderId)
+      .single();
+    if (storeIdOrderError) {
+      alert(storeIdOrderError.message);
+      return;
+    }
+    console.log("store:", storeIdOrder);
 
-      localStorage.setItem(`cart_${user.id}`, JSON.stringify(updatedCart));
-      return updatedCart;
-    });
+    const { data: item, error: itemError } = await supabase
+      .from("orders_details")
+      .select("menu_id, quantity")
+      .eq("order_id", orderId)
+      .eq("menu_id", menuId)
+      .maybeSingle();
+
+    if (itemError) {
+      alert(itemError.message);
+      return;
+    }
+
+    // 5) quantity + 1
+    if (item) {
+      const { data: update, error: updateError } = await supabase
+        .from("orders_details")
+        .update({
+          quantity: item.quantity + 1,
+          subtotal: (item.quantity + 1) * price,
+        })
+        .eq("order_id", orderId) //
+        .eq("menu_id", menuId)
+        .select();
+
+      if (updateError) {
+        alert(updateError.message);
+        return;
+      }
+      alert("เพิ่มลงตะกร้าแล้ว2 🛒");
+    } else {
+      if (newMenu.store_id === storeIdOrder.store_id) {
+        const { error: insertError } = await supabase
+          .from("orders_details")
+          .insert({
+            order_id: orderId,
+            menu_id: menuId,
+            quantity: 1,
+            price: price,
+            subtotal: price,
+          });
+
+        if (insertError) {
+          alert(insertError.message);
+          return;
+        }
+        alert("เพิ่มลงตะกร้าแล้ว3 🛒");
+      } else {
+        alert("ไม่สามารถเพิ่มเมนูจากร้านอื่นได้!");
+      }
+    }
+    const { data: total, error: totalError } = await supabase
+      .from("orders_details")
+      .select("subtotal")
+      .eq("order_id", orderId);
+
+    if (totalError) {
+      alert(totalError.message);
+      return;
+    }
+    console.log("TOTAL", total);
+    const totalsub = total.reduce((sum, row) => sum + row.subtotal, 0);
+    console.log("totalsub", totalsub);
+    const { error: orderError } = await supabase
+      .from("orders")
+      .update({ total_price: totalsub })
+      .eq("id", orderId);
+
+    if (orderError) {
+      alert(orderError.message);
+      return;
+    }
   }
-  function decreaseQty(menu) {
-    if (!user) return;
-
-    setCart((prev) => {
-      const updatedCart = prev
-        .map((item) =>
-          item.id === menu.id ? { ...item, qty: item.qty - 1 } : item
-        )
-        .filter((item) => item.qty > 0); // ถ้า qty = 0 ลบทิ้ง
-
-      localStorage.setItem(`cart_${user.id}`, JSON.stringify(updatedCart));
-      return updatedCart;
-    });
-  }
-
-  const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
-
   return (
     <div className={styles.container}>
       <div className={styles.top}>
@@ -81,8 +166,6 @@ export default function StorePageClient({ store, menus }) {
         <div className={styles.menu}>
           {menus.length > 0 &&
             menus.map((menu) => {
-              const cartItem = cart.find((c) => c.id === menu.id);
-              const qty = cartItem?.qty ?? 0;
               return (
                 <div key={menu.id}>
                   <div className={styles.card}>
@@ -98,6 +181,7 @@ export default function StorePageClient({ store, menus }) {
                     <div className={styles.carddetail}>
                       <div>
                         <h4>{menu.name}</h4>
+
                         <span>{menu.description}</span>
                       </div>
                       <div className={styles.carddetail_price}>
@@ -105,28 +189,15 @@ export default function StorePageClient({ store, menus }) {
                       </div>
                     </div>
 
-                    {qty > 0 && <div className={styles.qtymenu}>{qty}</div>}
-                    {user ? (
-                      <div className={styles.addminusdiv}>
-                        {qty > 0 && (
-                          <button
-                            className={styles.minus}
-                            onClick={() => decreaseQty(menu)}
-                          >
-                            −
-                          </button>
-                        )}
-
-                        <button
-                          className={styles.addcart}
-                          onClick={() => addToCart(menu)}
-                        >
-                          +
-                        </button>
-                      </div>
-                    ) : (
-                      ""
-                    )}
+                    <div className={styles.addmenu}>
+                      {/* <button className={styles.minus}>-</button> */}
+                      <button
+                        className={styles.add}
+                        onClick={() => addToOrder(menu.id, menu.price)}
+                      >
+                        +
+                      </button>
+                    </div>
                   </div>
                 </div>
               );
@@ -141,9 +212,8 @@ export default function StorePageClient({ store, menus }) {
         <Link href="/" className={styles.back}>
           ⬅ กลับ
         </Link>
-        <Link href="/cart" className={styles.cart}>
+        <Link href="/ordercart" className={styles.cart}>
           🛒 My cart{" "}
-          {totalQty > 0 && <span className={styles.badge}>{totalQty}</span>}
         </Link>
       </div>
     </div>

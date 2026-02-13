@@ -2,12 +2,14 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import styles from "@/app/order/orderPage.module.css";
+import styles from "@/app/orders/orderPage.module.css";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabaseClient";
-export default function OrderPageClient() {
+import { Bruno_Ace, Cal_Sans } from "next/font/google";
+export default function OrderCartPageClient() {
   const [user, setUser] = useState(null);
   const [orders, setOrders] = useState([]);
+ // const [ordersCart, setOrdersCart] = useState(null);
 
   // โหลด user
   useEffect(() => {
@@ -38,41 +40,7 @@ export default function OrderPageClient() {
     loadOrders();
   }, [user]);
 
-  // realtime order status
-  useEffect(() => {
-    if (!user) return;
 
-    const channel = supabase
-      .channel("realtime-orders")
-      .on(
-        "postgres_changes",
-        {
-          event: "UPDATE",
-          schema: "public",
-          table: "orders",
-          filter: `user_id=eq.${user.id}`,
-        },
-        (payload) => {
-          console.log("Realtime update:", payload.new);
-
-          setOrders((prev) =>
-            prev.map((order) =>
-              order.id === payload.new.id
-                ? { ...order, status: payload.new.status }
-                : order
-            )
-          );
-          if (payload.new.status === "finished") {
-            alert(`🍔 Order ที่่ ${payload.new.id} พร้อมแล้ว!`);
-          }
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [user]);
 
   // render ทีหลัง
   if (user === null) {
@@ -85,13 +53,16 @@ export default function OrderPageClient() {
         <h1>🍔 My order</h1>
         <span>All orders</span>
       </div>
+
+     
       <div className={styles.order}>
+        <h3>สั่งสำเร็จ</h3>
         {orders.length === 0 && (
           <div className={styles.nomenu}>ยังไม่มีคำสั่งซื้อ</div>
         )}
         {orders?.map((order) => (
           <Link
-            href={"/order/" + order.id}
+            href={"/orders/" + order.id}
             className={styles.order_card}
             key={order.id}
           >

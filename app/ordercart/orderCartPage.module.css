@@ -1,0 +1,241 @@
+.container {
+  overflow: hidden;
+  padding: 20px;
+}
+
+.head h1 {
+  margin-bottom: 10px;
+}
+.head span {
+  color: gray;
+}
+.order {
+  border-radius: 10px;
+  margin-top: 15px;
+}
+.order a {
+  color: black;
+}
+.order_card {
+  background-color: white;
+  border-radius: 15px;
+  margin-bottom: 15px;
+  padding: 10px 15px;
+  position: relative;
+  display: flex;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+.order_card:hover {
+  background-color: rgb(248, 248, 248);
+}
+.order_card h3 {
+  margin: 0;
+  font-size: 24px;
+  display: inline;
+  margin-right: 20px;
+}
+.divimage {
+  position: relative;
+  width: 90px;
+  height: 90px;
+}
+.image {
+  object-fit: cover;
+  border-radius: 15px;
+}
+.order_card_text {
+  margin-left: 15px;
+  width: 100%;
+}
+.order_card_text h4 {
+  margin: 0;
+  font-size: 18px;
+}
+.order_card_text span {
+  color: gray;
+  font-size: 14px;
+}
+.order_card_head {
+  display: flex;
+  justify-content: space-between;
+}
+.order_card_menus {
+  background-color: #f8fafc;
+  padding: 5px;
+  border-radius: 10px;
+}
+.order_card_menus span {
+  color: black;
+}
+.order_card_price {
+  padding: 5px 0;
+  color: green;
+  font-size: 18px;
+}
+
+.nomenu {
+  color: gray;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+  font-size: 26px;
+  font-weight: bold;
+}
+
+.order_cart {
+  background-color: white;
+  border-radius: 15px;
+  margin-bottom: 15px;
+  margin-top: 15px;
+  padding: 10px 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.order_cart_head {
+  display: flex;
+}
+.order_cart_head_text {
+  margin-left: 15px;
+}
+.order_cart_head_text h4 {
+  margin: 0;
+  font-size: 18px;
+}
+.order_cart_head_text span {
+  color: rgb(255, 174, 0);
+  font-size: 16px;
+}
+
+.order_cart_detail {
+  width: 100%;
+}
+.order_cart_menus {
+  margin: 15px 0;
+}
+.order_cart_menu_single {
+  margin: 10px 0;
+  background-color: #f8fafc;
+  padding: 15px;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+}
+.order_cart_menu_single:hover {
+  background-color: #e5eaf0;
+}
+.order_cart_menu {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.order_cart_menu_end {
+  display: flex;
+}
+.order_cart_menu_end span {
+  margin-right: 20px;
+}
+.order_cart_menu_end button {
+  font-size: 20px;
+  font-weight: bold;
+
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 25px;
+  width: 25px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  border: solid 0px;
+  padding: 5px;
+}
+
+.add {
+  background-color: rgb(0, 143, 226);
+}
+.add:hover {
+  background-color: rgb(0, 93, 146);
+  cursor: pointer;
+}
+.minus {
+  background-color: rgb(158, 0, 0);
+  margin-right: 7px;
+}
+
+.minus:hover {
+  background-color: rgb(129, 0, 0);
+  cursor: pointer;
+}
+.divDel {
+  position: relative;
+  width: 25px;
+  height: 25px;
+}
+.del {
+  background-color: rgb(255, 210, 210);
+  margin-right: 7px;
+}
+.del:hover {
+  background-color: rgb(204, 148, 148);
+}
+.order_cart_total {
+  margin: 0px 0;
+  padding: 5px 0;
+  color: green;
+  font-size: 18px;
+  display: flex;
+  justify-content: flex-end;
+}
+.order_cart_total h4 {
+  margin: 0px 0;
+}
+
+.order_cart_checkout {
+  margin-top: 10px;
+}
+.order_cart_checkout button {
+  background-color: #0064cf;
+  transition: all 0.2s ease;
+  color: white;
+  width: 100%;
+  font-size: 20px;
+  padding: 15px 0;
+  border-radius: 10px;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  font-weight: bold;
+}
+.order_cart_checkout button:hover {
+  background-color: #004fa3;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.storelink {
+  color: #3b72b2;
+}
+.storelink:hover {
+  color: rgb(0, 57, 117);
+  cursor: pointer;
+}
+.order_status {
+  padding: 5px;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: bold;
+  height: fit-content;
+}
+.pending {
+  background-color: #cce5ff;
+  color: #004085;
+}
+
+.cooking {
+  background-color: #ffd19d;
+  color: rgb(231, 129, 12);
+}
+
+.finished {
+  background-color: #11be39;
+  color: #155724;
+}

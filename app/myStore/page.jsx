@@ -2,8 +2,8 @@ export const metadata = {
   title: "myStore",
 };
 
-import StorePageClient from "./StorePageClient";
+import MyStorePageClient from "./MyStorePageClient";
 
 export default function Page() {
-  return   <StorePageClient/>;
+  return   <MyStorePageClient/>;
 }

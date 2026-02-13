@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import styles from "@/app/order/[orderid]/orderdetailPage.module.css";
+import styles from "@/app/orders/[orderid]/orderDetailPage.module.css";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabaseClient";
 export default function OrderDetailPageClient({ orderid }) {
@@ -48,7 +48,7 @@ export default function OrderDetailPageClient({ orderid }) {
   return (
     <div className={styles.container}>
       <div className={styles.head}>
-         <Link className={styles.backshop} href="/order">
+         <Link className={styles.backshop} href="/orders">
           ⬅
         </Link>
         <h1>Order#{orderid}</h1>

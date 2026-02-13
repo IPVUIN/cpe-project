@@ -24,7 +24,7 @@ export async function POST(req) {
             Authorization: `Bearer ${token}`,
           },
         },
-      }
+      },
     );
 
     // ตรวจสอบว่า token นี้เป็นของ user จริง
@@ -39,149 +39,124 @@ export async function POST(req) {
     }
 
     // รับรายการสินค้าที่ผู้ใช้เลือก
-    const { cart } = await req.json();
-    //console.log("cart : ", cart);
-
-    // cart ต้องเป็น array และไม่ว่าง
-    if (!Array.isArray(cart) || cart.length === 0) {
-      return NextResponse.json({ error: "cart ไม่ถูกต้อง" }, { status: 400 });
+    const { order_id } = await req.json();
+    if (!order_id) {
+      return NextResponse.json({ error: "missing order_id" }, { status: 400 });
     }
 
-    // ดึง menu_id ทั้งหมดจาก cart
-    const menuIds = cart.map((item) => item.id);
-    //console.log("menuIds : ", menuIds);
+    const { data: order, error: orderErr } = await supabase
+      .from("orders")
+      .select(
+        `
+        id, user_id, status, store_id,
+        orders_details (
+          id, menu_id, quantity, subtotal
+        )
+      `,
+      )
+      .eq("id", order_id)
+      .eq("user_id", user.id)
+      .single();
+    console.log("order:", order);
+    if (orderErr || !order) {
+      return NextResponse.json({ error: "order not found" }, { status: 404 });
+    }
 
-    // ดึงราคาจริงจาก DB
-    const { data: menus, error: menuError } = await supabase
+    const menuIds = order.orders_details.map((it) => it.menu_id);
+
+    const { data: menus, error: menusErr } = await supabase
       .from("menus")
-      .select("id, store_id, price")
+      .select("id, price, name")
       .in("id", menuIds);
-    console.log(menus);
-    // กันกรณี client ส่ง menu_id มั่ว
-    if (menuError || !menus || menus.length === 0) {
-      return NextResponse.json({ error: "ไม่พบเมนู" }, { status: 400 });
+    console.log("menus:", menus);
+    if (menusErr) {
+      return NextResponse.json({ error: "cannot load menus" }, { status: 500 });
     }
 
-    // ตรวจว่าเมนูทั้งหมดอยู่ร้านเดียวกันหรือไม่
-    const storeIds = [...new Set(menus.map((m) => m.store_id))];
-    //console.log("storeIds : ", storeIds);
-
-    // บังคับกติกาของระบบ (1 order = 1 store)
-    if (storeIds.length > 1) {
-      return NextResponse.json(
-        { error: "ไม่สามารถสั่งหลายร้านในออเดอร์เดียว" },
-        { status: 400 }
-      );
+    const priceById = new Map(menus.map((m) => [m.id, m.price]));
+    console.log("priceById:", priceById);
+    let total = 0;
+    for (const it of order.orders_details) {
+      const price = priceById.get(it.menu_id);
+      if (price == null) {
+        return NextResponse.json({ error: "menu not found" }, { status: 400 });
+      }
+      if (it.quantity <= 0) {
+        return NextResponse.json(
+          { error: "invalid quantity" },
+          { status: 400 },
+        );
+      }
+      total += price * it.quantity;
     }
+    console.log("total:", total);
 
-    const storeId = storeIds[0];
-    // console.log("storeID : ", storeId);
-
-    // คำนวณยอดรวม (server)
-    const menuMap = new Map();
-    menus.forEach((m) => {
-      menuMap.set(m.id, m.price);
-    });
-    //console.log("menuMap : ", menuMap);
-    const total = cart.reduce((sum, item) => {
-      const price = menuMap.get(item.id);
-      console.log("price : ", price);
-      return sum + price * item.qty;
-    }, 0);
-    //console.log("total : ", total);
-
-    // ดึงยอดเงินของผู้ใช้
-    const { data: wallet, error: walletError } = await supabase
+    const { data: wallet, error: walletErr } = await supabase
       .from("wallet")
-      .select("balance")
+      .select("id, balance")
       .eq("user_id", user.id)
       .single();
 
-    if (walletError || !wallet) {
-      return NextResponse.json({ error: "ไม่พบ wallet" }, { status: 400 });
+    if (walletErr || !wallet) {
+      return NextResponse.json({ error: "wallet not found" }, { status: 404 });
+    }
+    console.log("wallet:", wallet);
+
+    if (wallet.balance <= total) {
+      return NextResponse.json({ error: "ยอดเงินไม่พอ" }, { status: 400 });
     }
 
-    // ป้องกันยอดติดลบ
-    if (wallet.balance < total) {
-      return NextResponse.json({ error: "เงินไม่พอ" }, { status: 400 });
-    }
-
-    // สร้างรายการสั่งซื้อหลัก
-    const { data: order, error: orderError } = await supabase
-      .from("orders")
-      .insert({
-        user_id: user.id,
-        total_price: total,
-        store_id: storeId,
-      })
-      .select()
-      .single();
-
-    if (orderError) {
-      return NextResponse.json(
-        {
-          error: " order error",
-          //   error: orderError.message,
-          //   details: orderError.details,
-          //   hint: orderError.hint,
-          //   code: orderError.code,
-        },
-        { status: 500 }
-      );
-    }
-
-    // แยกรายการสินค้าแต่ละรายการ
-    const orderDetails = cart.map((item) => {
-      const price = menuMap.get(item.id);
-      return {
-        order_id: order.id,
-        menu_id: item.id,
-        quantity: item.qty,
-        price: price,
-        subtotal: price * item.qty,
-      };
-    });
-
-    const { error: orderDetailsError } = await supabase
-      .from("orders_details")
-      .insert(orderDetails);
-
-    if (orderDetailsError) {
-      return NextResponse.json(
-        {
-          error: " order error",
-          //   error: itemsError.message,
-          //   details: itemsError.details,
-          //   hint: itemsError.hint,
-          //   code: itemsError.code,
-        },
-        { status: 500 }
-      );
-    }
-
-    // หักเงินหลังจาก order สำเร็จ
-    const { error: updateWalletError } = await supabase
+    const { data: updatedWallet, error: updErr } = await supabase
       .from("wallet")
       .update({ balance: wallet.balance - total })
-      .eq("user_id", user.id);
-    if (updateWalletError) {
-      return NextResponse.json({ error: "หักเงินไม่สำเร็จ" }, { status: 500 });
-    }
+      .eq("id", wallet.id)
+      .gte("balance", total)
+      .select("id, balance")
+      .single();
 
-    const { error: insertWtError } = await supabase
+    if (updErr || !updatedWallet) {
+      return NextResponse.json(
+        { error: "ยอดเงินไม่พอหรือหักเงินไม่สำเร็จ" },
+        { status: 400 },
+      );
+    }
+    console.log("updatedWallet:", updatedWallet);
+
+    const { data: tx, error: txErr } = await supabase
       .from("wallet_transactions")
       .insert({
         user_id: user.id,
         order_id: order.id,
-        amount: total,
-        description: "จ่ายค่าอาหาร",
         type: "payment",
+        amount: total,
       });
-      if (insertWtError) {
-      return NextResponse.json({ error: "สร้างรายการธุรกรรมไม่สำเร็จ" }, { status: 500 });
+
+    if (txErr) {
+      return NextResponse.json(
+        { error: "cannot create transaction" },
+        { status: 500 },
+      );
+    }
+    console.log("tx:", tx);
+
+    const { error: orderUpErr } = await supabase
+      .from("orders")
+      .update({
+        total_price: total,
+        status: "pending",
+        created_at: new Date().toISOString(),
+      })
+      .eq("id", order.id)
+      .eq("user_id", user.id);
+
+    if (orderUpErr) {
+      return NextResponse.json(
+        { error: "cannot update order" },
+        { status: 500 },
+      );
     }
 
-    return NextResponse.json({ ok: true, order_id: order.id });
+    return NextResponse.json({ ok: true });
   } catch (err) {
     console.error(err);
     return NextResponse.json({ error: "server error" }, { status: 500 });

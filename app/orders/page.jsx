@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "🛍 Order",
+  title: "🛍 Orders",
 };
 
 import OrderPageClient from "./OrderPageClient";

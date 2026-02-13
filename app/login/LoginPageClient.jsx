@@ -39,6 +39,7 @@ export default function LoginClient() {
 
     const role = roleData.role;
     console.log(role);
+  
     if (role === "customer") router.push("/");
     if (role === "store_owner") router.push("/myStore/");
     if (role === "admin") router.push("/admin/panel");
