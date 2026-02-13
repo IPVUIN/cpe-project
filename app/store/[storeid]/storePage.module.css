@@ -91,7 +91,6 @@
 .imagemenu {
   border-radius: 15px;
   object-fit: cover;
-
 }
 
 .carddetail {
@@ -116,15 +115,16 @@
   font-weight: bold;
   font-size: 20px;
 }
-.addminusdiv {
+.addmenu {
   display: flex;
   position: absolute;
   right: 15px;
   bottom: 15px;
 }
-.addminusdiv button {
+.addmenu button {
   font-size: 20px;
   font-weight: bold;
+
   color: white;
   display: flex;
   align-items: center;
@@ -136,19 +136,21 @@
   border: solid 0px;
   padding: 5px;
 }
-.addcart {
+.add {
   background-color: rgb(0, 143, 226);
+}
+.add:hover {
+  background-color: rgb(0, 93, 146);
+  cursor: pointer;
 }
 .minus {
   background-color: rgb(158, 0, 0);
   margin-right: 7px;
 }
-.addcart:hover {
-  background-color: rgb(0, 93, 146);
+
+.minus:hover {
+  background-color: rgb(129, 0, 0);
   cursor: pointer;
-}
-.minus:hover{
-    background-color: rgb(129, 0, 0);  cursor: pointer;
 }
 .bottom {
   display: flex;
@@ -213,8 +215,8 @@
   justify-content: center;
   right: 15px;
 }
-.nomenu{
-   color: gray;
+.nomenu {
+  color: gray;
   display: flex;
   justify-content: center;
   align-items: center;

@@ -74,6 +74,16 @@
   font-size: 18px;
 }
 
+.nomenu {
+  color: gray;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+  font-size: 26px;
+  font-weight: bold;
+}
+
 .order_status {
   padding: 5px;
   border-radius: 12px;
@@ -94,14 +104,4 @@
 .finished {
   background-color: #11be39;
   color: #155724;
-}
-
-.nomenu {
-  color: gray;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 300px;
-  font-size: 26px;
-  font-weight: bold;
 }

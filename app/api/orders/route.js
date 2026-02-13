@@ -21,8 +21,39 @@ export async function GET(req) {
             Authorization: `Bearer ${token}`,
           },
         },
-      }
+      },
     );
+
+    const { data: orders_cart, error: orders_cart_error } = await supabase
+      .from("orders")
+      .select(
+        `
+  id,
+  stores(id,name,image_url),
+  total_price,
+  status,
+  created_at,
+   orders_details(
+      id,
+      quantity,
+      subtotal,
+      menus(
+        name,
+        price
+      )
+    )
+`,
+      )
+      .eq("status", "cart")
+      .maybeSingle();
+    // .order("created_at", { ascending: false });
+
+    if (orders_cart_error) {
+      return NextResponse.json(
+        { error: orders_cart_error.message },
+        { status: 500 },
+      );
+    }
 
     // 3) ดึง orders (RLS จะกรองให้เอง)
     const { data, error } = await supabase
@@ -39,7 +70,7 @@ export async function GET(req) {
       subtotal,
       menus(name)
     )
-`
+`,
       )
 
       .order("created_at", { ascending: false });
@@ -48,7 +79,7 @@ export async function GET(req) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    return NextResponse.json({ orders: data });
+    return NextResponse.json({ orders: data, cart: orders_cart });
   } catch (err) {
     return NextResponse.json({ error: "server error" }, { status: 500 });
   }
