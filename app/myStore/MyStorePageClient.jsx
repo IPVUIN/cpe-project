@@ -69,6 +69,9 @@ export default function MyStorePageClient() {
               <button className={styles.accept}>Accept</button>{" "}
               <button className={styles.reject}>Reject</button>
             </div>
+            <div>
+              test123
+            </div>
           </div>
         </div>
       </div>
