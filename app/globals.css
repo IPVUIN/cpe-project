@@ -31,6 +31,10 @@ a {
     transform: translateY(0);
   }
 }
+
+button {
+  font-family: var(--font-prompt);
+}
 .nologin {
   color: gray;
   font-size: 30px;
@@ -39,4 +43,13 @@ a {
   justify-content: center;
   align-items: center;
   height: 100vh;
+}
+.nolist{
+    color: gray;
+  font-size: 30px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 100px 0;
 }

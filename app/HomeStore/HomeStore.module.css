@@ -1,0 +1,180 @@
+.container {
+  padding: 20px;
+}
+.divimage {
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  height: 100px;
+  width: 150px;
+}
+
+.imagestore {
+  object-fit: cover;
+}
+.top_head {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.top_status {
+  display: flex;
+  gap: 10px;
+}
+.top_status div {
+  padding: 15px;
+  width: fit-content;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+.top_status div:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+.top_status div h3 {
+  margin: 10px 0 0 0;
+}
+
+.top_pending {
+  background-color: #cce5ff;
+  border: solid 1px #004085;
+}
+
+.top_pending h3 {
+  color: #004085;
+}
+.top_cooking {
+  background-color: #ffd19d;
+  border: solid 1px rgb(231, 129, 12);
+}
+
+.top_cooking h3 {
+  color: rgb(231, 129, 12);
+}
+
+.select {
+  margin: 20px 0;
+  background-color: #eaedf0;
+  padding: 5px;
+  border-radius: 10px;
+  gap: 5px;
+  display: flex;
+}
+.select button {
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+  background: #eaedf0;
+  font-size: 16px;
+  flex: 1;
+}
+.select button:hover {
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+}
+.select button.active {
+  background-color: white;
+}
+
+.order {
+  background-color: white;
+  border-radius: 15px;
+  padding: 15px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  margin-bottom: 15px;
+  transition: all 0.2s ease;
+}
+.order:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+.order h4 {
+  margin: 0 10px 0 0;
+  font-size: 18px;
+}
+.order_top {
+  display: flex;
+
+  align-items: center;
+}
+.order_top span {
+  padding: 5px;
+  border-radius: 10px;
+}
+.timeago {
+  opacity: 50%;
+}
+.order_text {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+}
+.order_menu {
+  background-color: #f8fafc;
+  padding: 10px;
+  border-radius: 15px;
+}
+.order_menu_list {
+  padding: 7px;
+  display: flex;
+  justify-content: space-between;
+  transition: all 0.2s ease;
+  border-radius: 10px;
+}
+.order_menu_list:hover {
+  background-color: #ececec;
+}
+.order_bottom {
+  display: flex;
+  margin-top: 10px;
+  gap: 10px;
+}
+.order_bottom button {
+  font-size: 16px;
+  padding: 10px;
+  border: none;
+  border-radius: 15px;
+  transition: all 0.2s ease;
+}
+.order_bottom button:hover {
+  cursor: pointer;
+}
+.total {
+  font-weight: bold;
+  font-size: 20px;
+  color: rgb(0, 207, 104);
+}
+.accept {
+  color: white;
+  background-color: #004085;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  flex: 2;
+}
+.accept:hover {
+  background-color: #0054ad;
+}
+.reject {
+  color: red;
+  background-color: white;
+  flex: 1;
+}
+.reject:hover {
+  background-color: #f8fafc;
+}
+.success {
+  color: white;
+  background-color: rgb(231, 129, 12);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  flex: 1;
+}
+.success:hover {
+  background-color: rgb(255, 147, 24);
+}
+.order_cooking {
+  color: rgb(231, 129, 12);
+  background-color: #ffd19d;
+}
+.order_pending {
+  background-color: #cce5ff;
+  color: #004085;
+}

@@ -3,9 +3,10 @@ export const metadata = {
 };
 
 import HomePageClient from "./HomePageClient";
-import { getStores } from "@/lib/database";
-export default async function Page() {
+import { getStores, getCategory } from "@/lib/database";
 
+export default async function Page() {
+  const storeCategory = await getCategory();
   const stores = await getStores();
-  return <HomePageClient stores={stores} />;
+  return <HomePageClient stores={stores} category={storeCategory} />;
 }

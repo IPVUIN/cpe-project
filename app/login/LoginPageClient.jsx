@@ -41,7 +41,7 @@ export default function LoginClient() {
     console.log(role);
   
     if (role === "customer") router.push("/");
-    if (role === "store_owner") router.push("/myStore/");
+    if (role === "store_owner") router.push("/HomeStore/");
     if (role === "admin") router.push("/admin/panel");
   }
 

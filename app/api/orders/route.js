@@ -72,7 +72,7 @@ export async function GET(req) {
     )
 `,
       )
-
+      .neq("status","cart")
       .order("created_at", { ascending: false });
 
     if (error) {
