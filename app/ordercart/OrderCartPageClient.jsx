@@ -12,6 +12,7 @@ export default function OrderCartPageClient() {
   const [ordersCart, setOrdersCart] = useState(null);
   const router = useRouter();
   const [userRole, setUserRole] = useState(null);
+  const [balance, setBalance] = useState(0);
   // โหลด user
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
@@ -47,6 +48,16 @@ export default function OrderCartPageClient() {
       setUserRole(roleData);
     }
 
+    async function loadWallet() {
+      const { data, error } = await supabase
+        .from("wallet")
+        .select("balance")
+        .single();
+
+      if (!error) setBalance(data.balance);
+    }
+
+    loadWallet();
     loadOrders();
   }, [user]);
   console.log("roleDATA", userRole);
@@ -318,15 +329,26 @@ export default function OrderCartPageClient() {
   return (
     <div className={styles.container}>
       <div className={styles.head}>
-        <h1>🍔 My Cart</h1>
-        <span>All orders</span>
+        <div>
+          <h1>🍔 My Cart</h1>
+          <span>All orders</span>
+        </div>
+
+        <div className={styles.top_wallet}>
+          <Link href="/wallet" className={styles.wallet_circle}>
+            {balance} บาท
+          </Link>
+        </div>
       </div>
       <h3>ตะกร้า</h3>
       {!ordersCart && <div className={styles.nomenu}>ตะกร้าว่างเปล่า</div>}
       {userRole?.role === "customer" && (
         <>
           {ordersCart?.stores && (
-            <div className={styles.order_cart} key={ordersCart.id}>
+            <div
+              className={`${styles.order_cart} pageFade`}
+              key={ordersCart.id}
+            >
               <div className={styles.order_cart_head}>
                 <div className={styles.divimage}>
                   <Image

@@ -3,7 +3,7 @@ export const metadata = {
 };
 
 import StorePageClient from "./StorePageClient";
-import { getStoreById, getMenusByStores } from "@/lib/database";
+import { getStoreById, getMenusByStores, LoadCateMenu } from "@/lib/database";
 
 export default async function Page({ params }) {
   const { storeid } = await params;
@@ -11,6 +11,7 @@ export default async function Page({ params }) {
   // ดึงข้อมูลที่ server
   const store = await getStoreById(storeid);
   const menus = await getMenusByStores(storeid);
+  const menusCate = await LoadCateMenu(storeid);
 
-  return <StorePageClient store={store} menus={menus} />;
+  return <StorePageClient store={store} menus={menus} menusCate={menusCate}/>;
 }

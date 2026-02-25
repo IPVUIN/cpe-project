@@ -54,8 +54,29 @@
   font-size: 18px;
 }
 
+.category {
+  margin: 80px 0 0 0;
+}
+.category button {
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+  background: white;
+  margin-right: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); 
+  font-size: 14x;
+}
+.category button:hover {
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+}
+.category button.active {
+  background-color: #ff9800;
+  color: white;
+}
+
 .listmenu {
-  margin-top: 70px;
   margin-bottom: 30px;
 }
 .menu {

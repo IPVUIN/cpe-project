@@ -59,7 +59,6 @@
 .top {
   display: flex;
   flex-direction: column;
-  padding: 20px 0px;
   width: 100%;
 }
 .top_header {
@@ -74,7 +73,7 @@
 }
 
 .top_user h1 {
-  margin: 0;
+  margin-bottom: 10px;
 }
 .top_under_user {
   color: gray;
@@ -124,4 +123,27 @@
   color: white;
   border-radius: 5px;
   cursor: pointer;
+}
+
+.category {
+  margin: 20px 0 10px 0;
+}
+.category button {
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+  background: white;
+  margin-right: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  font-family: var(--font-prompt);
+  font-size: 14x;
+}
+.category button:hover {
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+}
+.category button.active {
+  background-color: #ff9800;
+  color: white;
 }

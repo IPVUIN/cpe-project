@@ -2,12 +2,34 @@
   overflow: hidden;
   padding: 20px;
 }
+.head{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 
+}
 .head h1 {
   margin-bottom: 10px;
 }
 .head span {
   color: gray;
+}
+.wallet_circle {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background-color: rgb(255, 255, 255);
+  color: #00c573;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 18px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+.wallet_circle:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 .order {
   border-radius: 10px;

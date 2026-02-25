@@ -5,16 +5,32 @@ import Image from "next/image";
 import styles from "@/app/store/[storeid]/storePage.module.css";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabaseClient";
-export default function StorePageClient({ store, menus }) {
+export default function StorePageClient({ store, menus, menusCate }) {
   // ระหว่างโหลด
   if (!store) return <div className="nologin">กำลังโหลดข้อมูลร้าน...</div>;
 
   const [user, setUser] = useState(null);
+  const [menuc, setMenuc] = useState(null);
+
+  const [menuCate, setMenuCate] = useState(null);
+  const filteredMenus = menus.filter((menu) => {
+    const matchCategory = menuCate ? menu.menu_category === menuCate : true;
+
+    return matchCategory;
+  });
+  const sortedMenus = [...filteredMenus].sort((a, b) => a.id - b.id);
+  console.log("s", sortedMenus);
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
       setUser(data.user);
     });
-  }, []);
+    setMenuc(menusCate);
+  }, [menusCate]);
+
+  function cate(catId) {
+    setMenuCate(catId);
+  }
+
   console.log(store.id);
   async function addToOrder(menuId, price) {
     const { data: orderCart, error: orderCartError } = await supabase
@@ -144,6 +160,7 @@ export default function StorePageClient({ store, menus }) {
       return;
     }
   }
+
   return (
     <div className={styles.container}>
       <div className={styles.top}>
@@ -161,11 +178,28 @@ export default function StorePageClient({ store, menus }) {
           ⬅
         </Link>
       </div>
+      <div className={styles.category}>
+        <button
+          onClick={() => setMenuCate(null)}
+          className={menuCate === null ? styles.active : ""}
+        >
+          ทั้งหมด
+        </button>
+        {menuc?.map((cat) => (
+          <button
+            key={cat.id}
+            onClick={() => cate(cat.id)}
+            className={menuCate === cat.id ? styles.active : ""}
+          >
+            {cat.name}
+          </button>
+        ))}
+      </div>
       <div className={styles.listmenu}>
         <h2>Menu</h2>
         <div className={styles.menu}>
-          {menus.length > 0 &&
-            menus.map((menu) => {
+          {sortedMenus.length > 0 &&
+            sortedMenus.map((menu) => {
               return (
                 <div key={menu.id}>
                   <div className={styles.card}>
@@ -191,12 +225,16 @@ export default function StorePageClient({ store, menus }) {
 
                     <div className={styles.addmenu}>
                       {/* <button className={styles.minus}>-</button> */}
-                      <button
-                        className={styles.add}
-                        onClick={() => addToOrder(menu.id, menu.price)}
-                      >
-                        +
-                      </button>
+                      {user ? (
+                        <button
+                          className={styles.add}
+                          onClick={() => addToOrder(menu.id, menu.price)}
+                        >
+                          +
+                        </button>
+                      ) : (
+                        <></>
+                      )}
                     </div>
                   </div>
                 </div>

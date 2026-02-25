@@ -6,21 +6,33 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 
-export default function Page({ stores }) {
+export default function Page({ stores, category }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [user, setUser] = useState(null);
   const [username, setUsername] = useState("");
   const [role, setRole] = useState("");
   const [balance, setBalance] = useState(0);
-  const filteredStores = stores.filter((store) =>
-    store.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const [cate, setCate] = useState(null);
+  const [mounted, setMounted] = useState(false);
+
+  const filteredStores = stores.filter((store) => {
+    const matchSearch = store.name
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+
+    const matchCategory = cate ? store.store_category === cate : true;
+
+    return matchSearch && matchCategory;
+  });
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // โหลด user จาก session
   useEffect(() => {
     async function loadUser() {
       //  if (!user) return;
-
       const { data: auth } = await supabase.auth.getUser();
 
       if (!auth?.user) {
@@ -55,10 +67,14 @@ export default function Page({ stores }) {
     loadWallet();
   }, []);
 
+  function storeCat(catId) {
+    setCate(catId);
+  }
   // if (user === null) {
   //   return <div className={"nologin"}>โปรดเข้าสู่ระบบ...</div>;
   // }
 
+  if (!mounted) return null;
   const sortedStores = [...filteredStores].sort((a, b) => a.id - b.id);
 
   return (
@@ -98,10 +114,27 @@ export default function Page({ stores }) {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
+          <div className={styles.category}>
+            <button
+              onClick={() => setCate(null)}
+              className={cate === null ? styles.active : ""}
+            >
+              ทั้งหมด
+            </button>
+            {category.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => storeCat(cat.id)}
+                className={cate === cat.id ? styles.active : ""}
+              >
+                {cat.name}
+              </button>
+            ))}
+          </div>
         </div>
         <h2>Stores</h2>
         <div className={styles.listshop}>
-          {filteredStores.length > 0 ? (
+          {sortedStores.length > 0 ? (
             sortedStores.map((item) => (
               <div key={item.id} className={styles.shopdiv}>
                 <Link
