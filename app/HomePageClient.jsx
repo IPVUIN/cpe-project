@@ -54,18 +54,24 @@ export default function Page({ stores, category }) {
         setRole(userData.role);
       }
     }
-    async function loadWallet() {
-      const { data, error } = await supabase
-        .from("wallet")
-        .select("balance")
-        .single();
-
-      if (!error) setBalance(data.balance);
-    }
 
     loadUser();
-    loadWallet();
   }, []);
+  useEffect(() => {
+    if (!user) return;
+    async function loadWallet() {
+      const { data: wallet } = await supabase
+        .from("wallet")
+        .select("balance")
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+      if (wallet) {
+        setBalance(wallet.balance);
+      }
+    }
+    loadWallet();
+  }, [user]);
 
   function storeCat(catId) {
     setCate(catId);
@@ -74,12 +80,12 @@ export default function Page({ stores, category }) {
   //   return <div className={"nologin"}>โปรดเข้าสู่ระบบ...</div>;
   // }
 
-  if (!mounted) return null;
   const sortedStores = [...filteredStores].sort((a, b) => a.id - b.id);
 
+  if (!mounted) return null;
   return (
     <>
-      <div className={styles.container}>
+      <div>
         <div className={styles.top}>
           {user ? (
             <div className={styles.top_header}>
@@ -90,7 +96,7 @@ export default function Page({ stores, category }) {
 
               <div className={styles.top_wallet}>
                 <Link href="/wallet" className={styles.wallet_circle}>
-                  {balance} บาท
+                  ฿{balance}
                 </Link>
               </div>
             </div>
@@ -109,7 +115,7 @@ export default function Page({ stores, category }) {
             <input
               suppressHydrationWarning
               type="text"
-              placeholder="Search stores..."
+              placeholder="ค้นหาร้านค้า..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -143,7 +149,7 @@ export default function Page({ stores, category }) {
                 >
                   <div className={styles.divimage}>
                     <Image
-                      src={item.image_url || "/miko.jpg"}
+                      src={item.image_url || "/iconmain.png"}
                       fill
                       alt="shopicon"
                       className={styles.imagestore}

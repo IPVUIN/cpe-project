@@ -1,0 +1,196 @@
+.top h2 {
+  margin-bottom: 0;
+}
+.top span{
+    opacity: 50%;
+}
+.my_wallet {
+  background-color: #25a866;
+  padding: 25px;
+  margin: 20px 0;
+  border-radius: 20px;
+  color: white;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(8, 233, 0, 0.15);
+}
+.my_wallet h3 {
+  font-size: 40px;
+  margin: 10px 0;
+}
+.content {
+  display: flex;
+  gap: 20px;
+}
+.content h3 {
+  margin: 0;
+}
+.content button {
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+}
+.request {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  padding: 20px;
+  flex: 1;
+  background-color: white;
+  border-radius: 20px;
+  max-height: fit-content;
+}
+.request input {
+  border: solid 1px #eee;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+  font-size: 16px;
+  padding: 10px;
+  transition: all 0.2s ease;
+}
+.request input:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+.request_bank {
+  display: flex;
+  flex-direction: column;
+  margin: 15px 0 25px 0;
+}
+.request_bank select {
+  padding: 10px;
+  border-radius: 10px;
+  margin-top: 10px;
+  border: solid 1px #eee;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  font-family: var(--font-prompt);
+  width: 100%;
+}
+.request_bank input {
+  margin-top: 10px;
+}
+.request_bank_detail {
+  display: flex;
+  margin: 10px 0;
+  gap: 20px;
+}
+.request_bank_detail input {
+  margin-top: 10px;
+}
+.request_bank_detail div {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+.request_amount {
+  display: flex;
+  flex-direction: column;
+  margin: 25px 0 5px 0;
+}
+.request_amount input {
+  margin-top: 10px;
+}
+.request_amount_under {
+  font-size: 14px;
+
+  color: gray;
+}
+.btn_req {
+  background-color: rgb(0, 143, 226);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  color: white;
+  transition: all 0.2s ease;
+  width: 100%;
+  margin-top: 10px;
+}
+.btn_req:hover {
+  background-color: rgb(0, 93, 146);
+  cursor: pointer;
+}
+.history {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  padding: 20px;
+  flex: 1;
+  background-color: white;
+  border-radius: 20px;
+}
+.history_select {
+  background-color: #eaedf0;
+  padding: 5px;
+  display: flex;
+  gap: 5px;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+.history_select button {
+  background-color: transparent;
+  flex: 1;
+  transition: all 0.2s ease;
+}
+.history_select button.active {
+  background-color: white;
+}
+.history_select button:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+}
+.history_content {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.history_card {
+  display: flex;
+  border-radius: 20px;
+  padding: 15px;
+  justify-content: space-between;
+  border: solid 1px #eee;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+.history_card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+}
+.history_card div {
+  display: flex;
+  flex-direction: column;
+}
+.history_card_right {
+  align-items: center;
+}
+.history_card_right b{
+  color: rgb(0, 182, 82);;
+}
+.status {
+  padding: 5px 7px;
+  border-radius: 20px;
+  font-size: 14px;
+}
+
+
+.btnClose {
+  background: white;
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: none;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+.btnClose:hover {
+  cursor: pointer;
+  background-color: #eaedf0;
+}
+.divimage {
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  height: 400px;
+  width: 100%;
+}
+
+.imagestore {
+  object-fit: cover;
+}

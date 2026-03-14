@@ -93,7 +93,7 @@ export async function POST(req) {
 
     const { data: wallet, error: walletErr } = await supabase
       .from("wallet")
-      .select("id, balance")
+      .select("id, balance, reserved_balance")
       .eq("user_id", user.id)
       .single();
 
@@ -102,42 +102,61 @@ export async function POST(req) {
     }
     console.log("wallet:", wallet);
 
-    if (wallet.balance <= total) {
+    const available = wallet.balance - wallet.reserved_balance;
+    if (available <= total) {
       return NextResponse.json({ error: "ยอดเงินไม่พอ" }, { status: 400 });
     }
 
-    const { data: updatedWallet, error: updErr } = await supabase
+    const { data: walletUpdate, error: walletUpdateErr } = await supabase
       .from("wallet")
-      .update({ balance: wallet.balance - total })
-      .eq("id", wallet.id)
-      .gte("balance", total)
-      .select("id, balance")
-      .single();
+      .update({
+        reserved_balance: wallet.reserved_balance + total,
+      })
+      .eq("user_id", user.id);
 
-    if (updErr || !updatedWallet) {
+    if (walletUpdateErr) {
       return NextResponse.json(
-        { error: "ยอดเงินไม่พอหรือหักเงินไม่สำเร็จ" },
-        { status: 400 },
+        { error: "wallet can not update!" },
+        { status: 404 },
       );
     }
-    console.log("updatedWallet:", updatedWallet);
+    // if(walletUpdate){
+    //   return NextResponse.json(
+    //     { error: "wallet can not update!" }
+    //   );
+    // }
+    // const { data: updatedWallet, error: updErr } = await supabase
+    //   .from("wallet")
+    //   .update({ balance: wallet.balance - total })
+    //   .eq("id", wallet.id)
+    //   .gte("balance", total)
+    //   .select("id, balance")
+    //   .single();
 
-    const { data: tx, error: txErr } = await supabase
-      .from("wallet_transactions")
-      .insert({
-        user_id: user.id,
-        order_id: order.id,
-        type: "payment",
-        amount: total,
-      });
+    // if (updErr || !updatedWallet) {
+    //   return NextResponse.json(
+    //     { error: "ยอดเงินไม่พอหรือหักเงินไม่สำเร็จ" },
+    //     { status: 400 },
+    //   );
+    // }
+    // console.log("updatedWallet:", updatedWallet);
 
-    if (txErr) {
-      return NextResponse.json(
-        { error: "cannot create transaction" },
-        { status: 500 },
-      );
-    }
-    console.log("tx:", tx);
+    // const { data: tx, error: txErr } = await supabase
+    //   .from("wallet_transactions")
+    //   .insert({
+    //     user_id: user.id,
+    //     order_id: order.id,
+    //     type: "payment",
+    //     amount: total,
+    //   });
+
+    // if (txErr) {
+    //   return NextResponse.json(
+    //     { error: "cannot create transaction" },
+    //     { status: 500 },
+    //   );
+    // }
+    // console.log("tx:", tx);
 
     const { error: orderUpErr } = await supabase
       .from("orders")

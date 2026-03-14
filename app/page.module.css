@@ -1,10 +1,5 @@
-.container {
-  overflow: hidden;
-  padding: 20px;
-}
-.container h2 {
-  margin-top: 0px;
-}
+
+
 .listshop {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

@@ -1,0 +1,468 @@
+/* =========================================
+   CONTAINER & LAYOUT
+   ========================================= */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: var(--font-prompt), sans-serif;
+}
+
+.adminControlHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.title {
+  margin: 0;
+  font-size: 26px;
+  color: #1e293b;
+}
+
+.addBtn {
+  background-color: #00c573;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 12px;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+  box-shadow: 0 4px 10px rgba(0, 197, 115, 0.2);
+}
+
+.addBtn:hover {
+  background-color: #00a35f;
+  transform: translateY(-2px);
+}
+
+.divider {
+  border: 0;
+  border-top: 1px solid #f1f5f9;
+  margin-bottom: 25px;
+}
+
+/* =========================================
+   SEARCH & CATEGORY FILTER
+   ========================================= */
+.top {
+  margin-bottom: 25px;
+}
+
+.search input {
+  width: 100%;
+  padding: 12px 18px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  font-size: 16px;
+  outline: none;
+  transition: 0.2s;
+  box-sizing: border-box;
+}
+
+.search input:focus {
+  border-color: #f97316;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+}
+
+.category {
+  margin-top: 15px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.category button {
+  padding: 8px 18px;
+  border-radius: 20px;
+  border: 1px solid #e2e8f0;
+  background: white;
+  cursor: pointer;
+  transition: 0.2s;
+  color: #475569;
+}
+
+.category button:hover {
+  background: #f8fafc;
+}
+
+.category button.active {
+  background: #f97316;
+  color: white;
+  border-color: #f97316;
+}
+
+/* =========================================
+   STORE LIST GRID
+   ========================================= */
+.listshop {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.shopdiv {
+  background: white;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid #f1f5f9;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  transition: 0.3s;
+}
+
+.shopdiv:hover {
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+  transform: translateY(-4px);
+}
+
+.divimage {
+  position: relative;
+  width: 100%;
+  height: 180px;
+}
+
+.imagestore {
+  object-fit: cover;
+}
+
+.idBadge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: rgba(15, 23, 42, 0.7);
+  color: white;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: bold;
+  backdrop-filter: blur(4px);
+}
+
+.textcard {
+  padding: 18px;
+}
+
+.textcard h3 {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+  color: #1e293b;
+}
+
+.textcard p {
+  font-size: 14px;
+  color: #64748b;
+  margin-bottom: 20px;
+  height: 42px;
+  overflow: hidden;
+  display: -webkit-box;
+  /*-webkit-line-clamp: 2;*/
+  -webkit-box-orient: vertical;
+}
+
+.adminActions {
+  display: flex;
+  gap: 10px;
+}
+
+.editLink, .closeBtn, .openBtn {
+  flex: 1;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s;
+  text-align: center;
+  text-decoration: none;
+}
+
+.editLink {
+  background: #fff7ed;
+  color: #ea580c;
+}
+
+.editLink:hover {
+  background: #ffedd5;
+}
+
+/* ปุ่มสำหรับ "ปิดร้าน" (สีแดง) */
+.closeBtn {
+  background: #fef2f2;
+  color: #dc2626;
+}
+.closeBtn:hover {
+  background: #fee2e2;
+}
+
+/* ปุ่มสำหรับ "เปิดร้าน" (สีเขียว) */
+.openBtn {
+  background: #f0fdf4;
+  color: #16a34a;
+}
+.openBtn:hover {
+  background: #dcfce7;
+}
+
+.emptyState {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 60px;
+  color: #94a3b8;
+  background: #f8fafc;
+  border-radius: 16px;
+  border: 2px dashed #e2e8f0;
+}
+
+/* =========================================
+   MODAL OVERLAY & CONTAINER (ดัน Pop-up ขึ้นบน)
+   ========================================= */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.6);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;  /* ให้เริ่มจากด้านบนจอ */
+  padding: 80px 20px 20px;  /* เว้นระยะจากด้านบน 80px */
+  backdrop-filter: blur(3px);
+}
+
+.modalContent {
+  background: white;
+  width: 100%;
+  max-width: 500px;
+  border-radius: 24px;
+  padding: 32px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  position: relative;
+  
+  max-height: calc(100vh - 120px);  /* ป้องกันไม่ให้ล้นขอบล่างเมื่อดันขึ้นบน */
+  overflow-y: auto;  
+  margin: 0;
+}
+
+/* Custom Scrollbar สำหรับตัว Modal */
+.modalContent::-webkit-scrollbar {
+  width: 6px;
+}
+.modalContent::-webkit-scrollbar-track {
+  background: transparent;
+}
+.modalContent::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+.modalContent::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* =========================================
+   MODAL FORM ELEMENTS
+   ========================================= */
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.modalHeader h2 {
+  font-size: 22px;
+  margin: 0;
+  color: #0f172a;
+}
+
+.closeX {
+  background: none;
+  border: none;
+  font-size: 28px;
+  color: #94a3b8;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  transition: 0.2s;
+}
+
+.closeX:hover {
+  color: #475569;
+}
+
+.modalForm {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.formGroup label {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 8px;
+  display: block;
+  color: #334155;
+}
+
+.formGroup input, .formGroup select {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  font-size: 15px;
+  outline: none;
+  background: #fff;
+  transition: 0.2s;
+  box-sizing: border-box; /* สำคัญ: ป้องกัน Input ทะลุขอบ */
+  color: #0f172a;
+}
+
+.formGroup input:focus, .formGroup select:focus {
+  border-color: #f97316;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15);
+}
+
+/* =========================================
+   IMAGE UPLOAD SECTION (รูปที่ 2 และ 3)
+   ========================================= */
+.imageUploadWrapper {
+  width: 100%;
+  height: 150px;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+}
+
+/* สถานะที่ 1: เส้นประ "อัปโหลดรูปหลักฐาน" */
+.uploadPlaceholder {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  border: 2px dashed #cbd5e1;
+  border-radius: 12px;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  background: #f8fafc;
+  transition: 0.2s;
+  box-sizing: border-box;
+}
+
+.uploadPlaceholder:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+}
+
+.uploadContent {
+  text-align: center;
+  color: #64748b;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.plusIcon {
+  font-size: 24px;
+  font-weight: normal;
+  display: block;
+  margin-bottom: 4px;
+  color: #94a3b8;
+}
+
+/* สถานะที่ 2: รูปพรีวิว และปุ่มดูหลักฐาน */
+.previewContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.previewImage {
+  object-fit: cover;
+}
+
+.previewOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.2s;
+}
+
+.viewBtn {
+  background: white;
+  color: #0f172a;
+  padding: 8px 24px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  transition: 0.2s;
+}
+
+.viewBtn:hover {
+  transform: scale(1.05);
+}
+
+/* =========================================
+   MODAL ACTIONS (ปุ่มยกเลิก / บันทึก)
+   ========================================= */
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 24px;
+  margin-top: 10px;
+}
+
+.cancelBtn {
+  background: none;
+  border: none;
+  color: #64748b;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.cancelBtn:hover {
+  color: #334155;
+}
+
+.submitBtn {
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+  color: white;
+  padding: 12px 28px;
+  border-radius: 12px;
+  border: none;
+  font-weight: bold;
+  font-size: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 6px 15px rgba(234, 88, 12, 0.25);
+  transition: 0.2s;
+}
+
+.submitBtn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(234, 88, 12, 0.35);
+}
+
+.submitBtn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.saveIcon {
+  font-size: 18px;
+}

@@ -1,0 +1,20 @@
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 9999;
+}
+
+.modalBox {
+  position: fixed;              /* 🔥 สำคัญ */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);  /* 🔥 จัดกลางแท้จริง */
+  
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+}

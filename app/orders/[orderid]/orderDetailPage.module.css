@@ -20,17 +20,17 @@
   display: flex;
   justify-content: center;
   align-items: center;
-margin-top: 10px;
-margin-right: 20px;
-  opacity: 90%; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  margin-top: 10px;
+  margin-right: 20px;
+  opacity: 90%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   transition: all 0.2s ease;
 }
-.backshop:hover{
+.backshop:hover {
   opacity: 100%;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 .status {
-  background-color: white;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -64,6 +64,26 @@ margin-right: 20px;
 .total span {
   font-size: 22px;
   font-weight: bold;
+}
+.totalprice {
+  color: rgb(0, 182, 82);
+}
+.btnaccept {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+  margin-top: 15px;
+  font-size: 18px;
+  transition: all 0.2s ease;
+  color: #c4fff0;
+  background-color: #00ad74;
+}
+.btnaccept:hover {
+  cursor: pointer; background-color: #007950;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 .pending {
   background-color: #cce5ff;

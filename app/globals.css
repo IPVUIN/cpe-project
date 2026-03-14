@@ -1,20 +1,19 @@
 :root {
-  
-    font-family: var(--font-prompt);
+  font-family: var(--font-prompt);
 }
 
 body {
   margin: 0px;
   background-color: #f8fafc;
 }
-.marginsidebar{
-    margin-left: 240px; 
+.marginsidebar {
+  margin-left: 240px;
 }
 .container {
-  
-  max-width: 1200px;     
+  max-width: 1200px;
   margin-right: auto;
-  margin-left: auto; 
+  margin-left: auto;
+  padding: 10px;
 }
 a {
   text-decoration: none;
@@ -35,6 +34,12 @@ a {
 button {
   font-family: var(--font-prompt);
 }
+input {
+  font-family: var(--font-prompt);
+}
+textarea {
+  font-family: var(--font-prompt);
+}
 .nologin {
   color: gray;
   font-size: 30px;
@@ -42,14 +47,57 @@ button {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  /* height: 100vh; */
 }
-.nolist{
-    color: gray;
+.nolist {
+  color: gray;
   font-size: 30px;
   font-weight: bold;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 100px 0;
+  margin: 200px 0;
+}
+.pending {
+  color: #004085;
+}
+.pendingbg {
+  color: #004085;
+  background-color: #cce5ff;
+}
+.cooking {
+  color: rgb(231, 129, 12);
+}
+.cookingbg {
+  color: rgb(231, 129, 12);
+  background-color: #ffd19d;
+}
+.ready {
+  color: #6a7c00;
+}
+.readybg {
+  color: #6a7c00;
+  background-color: #f0f8c4;
+}
+.finished {
+  color: #155724;
+}
+.finishedbg {
+  background-color: #97f8ae;
+  color: #155724;
+}
+
+.approved {
+  color: #00964b;
+}
+.approvedbg {
+  color: #00964b;
+  background-color: #96ffcb;
+}
+.rejected {
+  color: #b8002e;
+}
+.rejectedbg {
+  color: #b8002e;
+  background-color: #ffb0c4;
 }

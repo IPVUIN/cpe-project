@@ -1,0 +1,162 @@
+.content button {
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+}
+.top h2 {
+  margin-bottom: 0;
+}
+.top span {
+  opacity: 50%;
+}
+.filterday {
+  background-color: #eaedf0;
+  display: flex;
+  padding: 5px;
+  gap: 5px;
+  margin: 10px 0;
+  border-radius: 10px;
+}
+.filterday button {
+  flex: 1;
+  background-color: #eaedf0;
+  font-size: 18px;
+  transition: all 0.2s ease;
+}
+.filterday button:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+}
+.filterday button.active {
+  background-color: white;
+}
+.customdate {
+  flex: 1;
+}
+.customdate button {
+  width: 100%;
+}
+.selectdate {
+  margin-top: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.selectdate input {
+  padding: 5px;
+  border-radius: 10px;
+}
+.loading {
+  font-size: 20px;
+}
+.stat {
+  display: flex;
+  padding: 5px;
+  gap: 5px;
+}
+.stat div {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+transition: all 0.2s ease;
+  border-radius: 10px;
+  padding: 20px 0 20px 30px;
+}
+.stat_sales {
+  background-color: #fff7c6;
+}
+.stat_sales:hover {
+  box-shadow: 0 2px 8px #ffd900;
+}
+.stat_sales b{
+  color: #c08300;
+}
+.stat_count {
+  background-color: #9fdbfd;
+
+}
+.stat_count:hover {
+  box-shadow: 0 2px 8px rgb(102, 142, 182);
+}
+.stat_count b{
+  color: #006dac;
+}
+.stat div b {
+  font-size: 40px;
+}
+
+.topsell_list {
+  background-color: aquamarine;
+  border-radius: 20px;
+  overflow: hidden;
+}
+.topsell_card {
+  background-color: white;
+  border: solid 1px #eee;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+.topsell_card:hover {
+  background-color: aliceblue;
+}
+.topsell_card div {
+  display: flex;
+}
+.topsell_card span {
+  opacity: 50%;
+}
+
+.divimage {
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  height: 60px;
+  width: 60px;
+}
+
+.imagemenu {
+  object-fit: cover;
+}
+.topsell_card_left {
+  align-items: center;
+}
+.topsell_card_left h3 {
+  margin: 0 20px 0 0;
+  background-color: aliceblue;
+  color: rgb(168, 188, 206);
+  padding: 10px;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.topsell_card_left .firstMenu {
+  background-color: #fff4c3;
+  color: #d5b011;
+}
+.topsell_card_left .secondMenu {
+  background-color: #ecf7f5;
+  color: #b7c0bf;
+}
+.topsell_card_left .thirdMenu {
+  background-color: #eed6b1;
+  color: #7e5920;
+}
+.topsell_card_left_text {
+  flex-direction: column;
+  margin-left: 10px;
+}
+.topsell_card_right {
+  align-items: center;
+  flex-direction: column;
+}
+.topsell_card_right b {
+  color: rgb(0, 182, 82);
+}

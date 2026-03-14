@@ -1,7 +1,4 @@
-.container {
-  overflow: hidden;
-  padding: 20px;
-}
+
 .head{
   display: flex;
   justify-content: space-between;
@@ -258,6 +255,6 @@
 }
 
 .finished {
-  background-color: #11be39;
+  background-color: #b0ffc3;
   color: #155724;
 }

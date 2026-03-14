@@ -28,7 +28,7 @@ export default function RootLayout({ children }) {
           <Sidebar />
           <div className="marginsidebar">
             <div className="container pageFade">{children}</div>
-            <Footer />
+            {/* <Footer /> */}
           </div>
         </div>
       </body>

@@ -1,0 +1,208 @@
+/* app/exchange_log/exchange_log.module.css */
+
+.page-container {
+  padding: 30px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f8fafc;
+  min-height: 100vh;
+}
+
+.page-title {
+  font-size: 24px;
+  color: #1e293b;
+  margin-bottom: 24px;
+  font-weight: bold;
+}
+
+/* 🌟 ส่วนของปุ่มเปลี่ยนแท็บ (Tabs) ดีไซน์แคปซูล */
+.tabs-container {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.tab-btn {
+  padding: 10px 40px;
+  border-radius: 50px; 
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+  min-width: 130px;
+  text-align: center;
+  text-transform: capitalize;
+}
+
+/* ⚪ แท็บที่ "ยังไม่ได้เลือก" (สีเทาอ่อน สบายตา) */
+.tab-inactive {
+  background-color: #f1f5f9;
+  color: #64748b;
+}
+
+.tab-inactive:hover {
+  background-color: #e2e8f0;
+  transform: scale(1.02);
+}
+
+/* 🎨 แท็บที่ "ถูกเลือกแล้ว" (แยกสีตามสถานะ) */
+.tab-active-pending {
+  background-color: #fde047; 
+  color: #ffffff; 
+  box-shadow: 0 4px 12px rgba(253, 224, 71, 0.4);
+  transform: scale(1.05);
+}
+
+.tab-active-approved {
+  background-color: #bbf7d0; 
+  color: #166534; 
+  box-shadow: 0 4px 12px rgba(187, 247, 208, 0.4);
+  transform: scale(1.05);
+}
+
+.tab-active-rejected {
+  background-color: #ff4d4f; 
+  color: #ffffff; 
+  box-shadow: 0 4px 12px rgba(255, 77, 79, 0.4);
+  transform: scale(1.05);
+}
+
+.tab-active-all {
+  background-color: #6b7280; 
+  color: #ffffff; 
+  box-shadow: 0 4px 12px rgba(107, 114, 128, 0.4);
+  transform: scale(1.05);
+}
+
+/* 🌟 แถบตัวกรองการค้นหาแยกช่อง (Filters Bar) */
+.filters-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding: 16px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  align-items: center;
+  border: 1px solid #f1f5f9;
+}
+
+.filter-input {
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  font-size: 13px;
+  outline: none;
+  flex: 1; 
+  min-width: 150px;
+  transition: all 0.2s;
+  background-color: #f8fafc;
+}
+
+.filter-input:focus {
+  border-color: #2563eb;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+}
+
+.btn-clear {
+  padding: 10px 20px;
+  border-radius: 10px;
+  background-color: #f1f5f9;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid #cbd5e1;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.btn-clear:hover {
+  background-color: #e2e8f0;
+  color: #334155;
+}
+
+/* 🌟 ตาราง (Table) */
+.table-card {
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
+  display: flex;
+  text-align: center;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.data-table th, 
+.data-table td {
+  padding: 16px 24px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.data-table th {
+  background-color: #f8fafc;
+  color: #475569;
+  font-weight: 600;
+  border-bottom: 2px solid #e2e8f0;
+  white-space: nowrap;
+}
+
+.data-table td {
+  color: #334155;
+  font-size: 14px;
+}
+
+.data-table tr:hover { background-color: #f8fafc; }
+
+/* 🌟 ป้ายสถานะในตาราง */
+.status-badge {
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: bold;
+  text-transform: capitalize;
+  display: inline-block;
+  text-align: center;
+  min-width: 90px;
+}
+
+.status-pending { background-color: #fde047; color: #ffffff; }
+.status-completed { background-color: #bbf7d0; color: #166534; }
+.status-rejected { background-color: #ff4d4f; color: #ffffff; }
+
+/* 🌟 Form Edit & Buttons */
+.edit-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 14px;
+  outline: none;
+}
+.edit-input:focus { border-color: #2563eb; }
+
+.btn {
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  margin-right: 8px;
+  transition: all 0.2s;
+}
+
+.btn:hover:not(:disabled) { opacity: 0.8; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.btn-edit { background-color: #e2e8f0; color: #475569; }
+.btn-save { background-color: #10b981; color: white; }
+.btn-cancel { background-color: #ef4444; color: white; }
