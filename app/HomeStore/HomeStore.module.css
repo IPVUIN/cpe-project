@@ -1,6 +1,3 @@
-.container {
-  padding: 20px;
-}
 .divimage {
   border-radius: 10px;
   overflow: hidden;
@@ -15,6 +12,25 @@
 .top_head {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+}
+.addorder {
+  border: none;
+  border-radius: 10px;
+  color: white;
+  background-color: rgb(0, 207, 104);
+  padding: 10px;
+  font-size: 16px;
+  transition: all 0.2s ease;
+}
+.addorder:hover {
+  cursor: pointer;
+  background-color: rgb(1, 226, 113);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+.top_head_left {
+  display: flex;
+  align-items: center;
   gap: 20px;
 }
 .top_status {
@@ -23,10 +39,10 @@
 }
 .top_status div {
   padding: 15px;
-  width: fit-content;
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   transition: all 0.2s ease;
+  flex: 1;
 }
 .top_status div:hover {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
@@ -35,21 +51,22 @@
   margin: 10px 0 0 0;
 }
 
+.top_sale {
+  border: solid 1px black;
+}
 .top_pending {
   background-color: #cce5ff;
   border: solid 1px #004085;
 }
 
-.top_pending h3 {
-  color: #004085;
-}
 .top_cooking {
   background-color: #ffd19d;
   border: solid 1px rgb(231, 129, 12);
 }
 
-.top_cooking h3 {
-  color: rgb(231, 129, 12);
+.top_ready {
+  background-color: #b0ffc3;
+  border: solid 1px #155724;
 }
 
 .select {
@@ -60,6 +77,18 @@
   gap: 5px;
   display: flex;
 }
+.newOrder {
+  background-color: #ff0000;
+  color: white;
+  padding: 2px;
+  width: 20px;
+  height: 20px;
+  margin-left: 10px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .select button {
   border: none;
   border-radius: 10px;
@@ -67,6 +96,9 @@
   background: #eaedf0;
   font-size: 16px;
   flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .select button:hover {
   transition: all 0.2s ease;
@@ -170,6 +202,16 @@
 .success:hover {
   background-color: rgb(255, 147, 24);
 }
+
+.received {
+  color: white;
+  background-color: rgb(0, 175, 102);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  flex: 1;
+}
+.received:hover {
+  background-color: rgb(0, 197, 115);
+}
 .order_cooking {
   color: rgb(231, 129, 12);
   background-color: #ffd19d;
@@ -178,3 +220,31 @@
   background-color: #cce5ff;
   color: #004085;
 }
+.order_ready {
+  background-color: #f2ffa9;
+  color: #6a7c00;
+}
+.order_finished {
+  background-color: #b0ffc3;
+  color: #155724;
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  z-index: 999;
+  padding-top: 150px;
+}
+@media screen and (min-width: 1700px) {
+  .modalOverlay {
+    padding-top: 200px;
+  }
+}
+

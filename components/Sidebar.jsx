@@ -74,10 +74,9 @@ export default function Sidebar() {
           {user && userRole?.role === "store_owner" && (
             <>
               <Link href="/HomeStore">🍔 Home</Link>
-      
-              <Link href="/logorders">📃 Orders</Link>
-              <Link href="/myStoreSetting">📃 My store</Link>
-              <Link href="/wallet">💸 Wallet</Link>
+              <Link href="/storereport">📊 Report</Link>
+              <Link href="/storesetting">🏠 My store</Link>
+              <Link href="/storewallet">💸 Wallet & Withdraw</Link>
             </>
           )}
 
@@ -87,6 +86,14 @@ export default function Sidebar() {
               <Link href="/ordercart">🛒 Cart</Link>
               <Link href="/orders">📃 Orders</Link>
               <Link href="/wallet">💸 Wallet</Link>
+            </>
+          )}
+          {user && userRole?.role === "admin" && (
+            <>
+              <Link href="/adminstoremanage">EditStore</Link>
+              <Link href="/Admin_exchange">Exchang</Link>
+              <Link href="/exchange_log">Exchang Log</Link>
+              <Link href="/Admin_ManageUsers">Users Manage</Link>
             </>
           )}
         </div>

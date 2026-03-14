@@ -1,0 +1,113 @@
+.Modal button{
+    border: none;
+  border-radius: 10px;
+  padding: 10px;
+}
+.Modal button:hover{
+cursor: pointer;
+}
+
+.modalDetail {
+  flex: 1;
+}
+.modalDetail button {
+  border: none;
+  padding: 10px;
+  border-radius: 10px;
+  transition: all 0.2s ease;background-color: #eaedf0;
+}
+.modalDetailhead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #ebedf0;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 10px;
+}
+.modalDetailhead h3 {
+  margin: 0;
+}
+.modalDetailhead span {
+  color: rgb(0, 207, 104);
+}
+
+.modalDetailtext {
+  margin-top: 10px;
+}
+.modalDetailtext textarea {
+  width: 100%;
+  max-width: 100%;
+  height: 100px;
+  border: #ebedf0 solid;
+  border-radius: 10px;
+  padding: 10px;
+  box-sizing: border-box;
+}
+.modalBottomMenu {
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  bottom: 0;
+  background: white;
+  padding-top: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+.modalBottomMenu button {
+  border: none;
+  padding: 10px;
+  transition: all 0.2s ease;
+  border-radius: 10px;
+}
+.modalBottomMenu button:hover {
+  cursor: pointer;
+}
+.modalMark {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+  gap: 10px;
+}
+.modalMark button {
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+.modalMark button:hover {
+  background-color: #e2e2e2;
+}
+.btnadd {
+  color: white;
+  background-color: rgb(0, 143, 226);
+  width: 100%;
+  font-size: 16px;
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+.btnadd:hover {
+  background-color: rgb(0, 93, 146);
+}
+.btnadd:disabled {
+  background-color: rgb(172, 225, 255);
+}
+.btnClose {
+  background: #eaedf0;
+  width: 40px;
+  height: 40px;
+  top: 15px;
+  right: 0px;
+}
+.btnClose:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  background-color: #eaedf0;
+  cursor: pointer;
+}

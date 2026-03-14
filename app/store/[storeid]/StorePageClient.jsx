@@ -5,6 +5,7 @@ import Image from "next/image";
 import styles from "@/app/store/[storeid]/storePage.module.css";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabaseClient";
+import ModalOrder from "./ModalOrder";
 export default function StorePageClient({ store, menus, menusCate }) {
   // ระหว่างโหลด
   if (!store) return <div className="nologin">กำลังโหลดข้อมูลร้าน...</div>;
@@ -19,7 +20,15 @@ export default function StorePageClient({ store, menus, menusCate }) {
     return matchCategory;
   });
   const sortedMenus = [...filteredMenus].sort((a, b) => a.id - b.id);
-  console.log("s", sortedMenus);
+
+  const [showModal, setShowModal] = useState(false);
+  const [selectedMenu, setSelectedMenu] = useState(null);
+  const [note, setNote] = useState("");
+  const [countAdd, setCountAdd] = useState(0);
+  const [OrderTotal, setOrderTotal] = useState(0);
+  const [countList, setCountList] = useState(0);
+  // console.log("s", sortedMenus);
+  // console.log("MM", menus);
   useEffect(() => {
     supabase.auth.getUser().then(({ data }) => {
       setUser(data.user);
@@ -31,141 +40,165 @@ export default function StorePageClient({ store, menus, menusCate }) {
     setMenuCate(catId);
   }
 
-  console.log(store.id);
-  async function addToOrder(menuId, price) {
-    const { data: orderCart, error: orderCartError } = await supabase
-      .from("orders")
-      .select("id")
-      .eq("user_id", user.id)
-      .eq("status", "cart")
-      .maybeSingle();
-    console.log("orderCart :  ", orderCart);
-    if (orderCartError) {
-      alert(orderCartError.message);
-      return;
-    }
+  console.log("selectedMenu", selectedMenu);
 
-    let orderId = orderCart?.id;
+  // async function addToOrder(menuId, price) {
+  //   // 1) หา cart
+  //   const { data: orderCart, error: orderCartError } = await supabase
+  //     .from("orders")
+  //     .select("id")
+  //     .eq("user_id", user.id)
+  //     .eq("status", "cart")
+  //     .maybeSingle();
 
-    if (!orderId) {
-      const { data: newOrder, error: newOrderError } = await supabase
-        .from("orders")
-        .insert({
-          user_id: user.id,
-          store_id: store.id,
-          status: "cart",
-          total_price: price,
-        })
-        .select("id")
-        .single();
-      if (newOrderError) {
-        alert(newOrderError.message);
-        return;
-      }
+  //   if (orderCartError) {
+  //     alert(orderCartError.message);
+  //     return;
+  //   }
 
-      orderId = newOrder.id;
-    }
-    console.log("newOrder : ", orderId);
-    const { data: newMenu, error: newMenuError } = await supabase
-      .from("menus")
-      .select("store_id")
-      .eq("id", menuId)
-      .single();
-    if (newMenuError) {
-      alert(newMenuError.message);
-      return;
-    }
-    console.log("NEWMENU:", newMenu);
-    //  console.log("store:", newOrder);
-    const { data: storeIdOrder, error: storeIdOrderError } = await supabase
-      .from("orders")
-      .select("store_id")
-      .eq("id", orderId)
-      .single();
-    if (storeIdOrderError) {
-      alert(storeIdOrderError.message);
-      return;
-    }
-    console.log("store:", storeIdOrder);
+  //   let orderId = orderCart?.id;
 
-    const { data: item, error: itemError } = await supabase
-      .from("orders_details")
-      .select("menu_id, quantity")
-      .eq("order_id", orderId)
-      .eq("menu_id", menuId)
-      .maybeSingle();
+  //   // 2) ถ้าไม่มี cart → สร้าง
+  //   if (!orderId) {
+  //     const { data: newOrder, error: newOrderError } = await supabase
+  //       .from("orders")
+  //       .insert({
+  //         user_id: user.id,
+  //         status: "cart",
+  //         total_price: 0,
+  //       })
+  //       .select("id")
+  //       .single();
 
-    if (itemError) {
-      alert(itemError.message);
-      return;
-    }
+  //     if (newOrderError) {
+  //       alert(newOrderError.message);
+  //       return;
+  //     }
 
-    // 5) quantity + 1
-    if (item) {
-      const { data: update, error: updateError } = await supabase
-        .from("orders_details")
-        .update({
-          quantity: item.quantity + 1,
-          subtotal: (item.quantity + 1) * price,
-        })
-        .eq("order_id", orderId) //
-        .eq("menu_id", menuId)
-        .select();
+  //     orderId = newOrder.id;
+  //   }
 
-      if (updateError) {
-        alert(updateError.message);
-        return;
-      }
-      alert("เพิ่มลงตะกร้าแล้ว2 🛒");
-    } else {
-      if (newMenu.store_id === storeIdOrder.store_id) {
-        const { error: insertError } = await supabase
-          .from("orders_details")
-          .insert({
-            order_id: orderId,
-            menu_id: menuId,
-            quantity: 1,
-            price: price,
-            subtotal: price,
-          });
+  //   // 3) หา store ของ menu
+  //   const { data: menu, error: menuError } = await supabase
+  //     .from("menus")
+  //     .select("store_id")
+  //     .eq("id", menuId)
+  //     .single();
 
-        if (insertError) {
-          alert(insertError.message);
-          return;
-        }
-        alert("เพิ่มลงตะกร้าแล้ว3 🛒");
-      } else {
-        alert("ไม่สามารถเพิ่มเมนูจากร้านอื่นได้!");
-      }
-    }
-    const { data: total, error: totalError } = await supabase
-      .from("orders_details")
-      .select("subtotal")
-      .eq("order_id", orderId);
+  //   if (menuError) {
+  //     alert(menuError.message);
+  //     return;
+  //   }
 
-    if (totalError) {
-      alert(totalError.message);
-      return;
-    }
-    console.log("TOTAL", total);
-    const totalsub = total.reduce((sum, row) => sum + row.subtotal, 0);
-    console.log("totalsub", totalsub);
-    const { error: orderError } = await supabase
-      .from("orders")
-      .update({ total_price: totalsub })
-      .eq("id", orderId);
+  //   const storeId = menu.store_id;
 
-    if (orderError) {
-      alert(orderError.message);
-      return;
-    }
-  }
+  //   // 4) เช็คว่า order นี้มี store นี้ไหม
+  //   const { data: orderStore, error: orderStoreError } = await supabase
+  //     .from("order_stores")
+  //     .select("id")
+  //     .eq("order_id", orderId)
+  //     .eq("store_id", storeId)
+  //     .maybeSingle();
+
+  //   if (orderStoreError) {
+  //     alert(orderStoreError.message);
+  //     return;
+  //   }
+
+  //   let orderStoreId = orderStore?.id;
+
+  //   // 5) ถ้ายังไม่มี → สร้าง order_store
+  //   if (!orderStoreId) {
+  //     const { data: newOrderStore, error: newOrderStoreError } = await supabase
+  //       .from("order_stores")
+  //       .insert({
+  //         order_id: orderId,
+  //         store_id: storeId,
+  //         store_total:price,
+  //         status: "cart",
+  //       })
+  //       .select("id")
+  //       .single();
+
+  //     if (newOrderStoreError) {
+  //       alert(newOrderStoreError.message);
+  //       return;
+  //     }
+
+  //     orderStoreId = newOrderStore.id;
+  //   }
+
+  //   // 6) เช็ค menu ใน cart
+  //   const { data: item, error: itemError } = await supabase
+  //     .from("orders_details")
+  //     .select("id, quantity")
+  //     .eq("order_stores_id", orderStoreId)
+  //     .eq("menu_id", menuId)
+  //     .maybeSingle();
+
+  //   if (itemError) {
+  //     alert(itemError.message);
+  //     return;
+  //   }
+
+  //   // 7) เพิ่มจำนวน
+  //   if (item) {
+  //     const { error: updateError } = await supabase
+  //       .from("orders_details")
+  //       .update({
+  //         quantity: item.quantity + 1,
+  //         subtotal: (item.quantity + 1) * price,
+  //       })
+  //       .eq("id", item.id);
+
+  //     if (updateError) {
+  //       alert(updateError.message);
+  //       return;
+  //     }
+  //   } else {
+  //     const { error: insertError } = await supabase
+  //       .from("orders_details")
+  //       .insert({
+  //         order_stores_id: orderStoreId,
+  //         menu_id: menuId,
+  //         quantity: 1,
+  //         price: price,
+  //         subtotal: price,
+  //       });
+
+  //     if (insertError) {
+  //       alert(insertError.message);
+  //       return;
+  //     }
+  //   }
+
+  //   // 8) คำนวณ total ของ order
+  //   const { data: total, error: totalError } = await supabase
+  //     .from("orders_details")
+  //     .select("subtotal");
+
+  //   if (totalError) {
+  //     alert(totalError.message);
+  //     return;
+  //   }
+
+  //   const totalsub = total.reduce((sum, row) => sum + row.subtotal, 0);
+
+  //   await supabase
+  //     .from("orders")
+  //     .update({ total_price: totalsub })
+  //     .eq("id", orderId);
+
+  //   alert("เพิ่มลงตะกร้าแล้ว 🛒");
+  // }
+
+  //console.log(menuCate);
 
   return (
-    <div className={styles.container}>
+    <div>
       <div className={styles.top}>
         <Image
-          src={store.image_url}
+          src={store.image_url || "/miko.jpg"}
           fill
           alt="bgshop"
           className={styles.imagestore}
@@ -201,11 +234,18 @@ export default function StorePageClient({ store, menus, menusCate }) {
           {sortedMenus.length > 0 &&
             sortedMenus.map((menu) => {
               return (
-                <div key={menu.id}>
+                <div
+                  key={menu.id}
+                  onClick={() => {
+                    setShowModal(true);
+                    setSelectedMenu(menu);
+                  }}
+                  style={{cursor:"pointer"}}
+                >
                   <div className={styles.card}>
                     <div className={styles.cardimage}>
                       <Image
-                        src="/cutlery.png"
+                        src={menu.image_url || "/iconmain.png"}
                         fill
                         alt={menu.name}
                         className={styles.imagemenu}
@@ -223,19 +263,19 @@ export default function StorePageClient({ store, menus, menusCate }) {
                       </div>
                     </div>
 
-                    <div className={styles.addmenu}>
-                      {/* <button className={styles.minus}>-</button> */}
+                    {/* <div className={styles.addmenu}>
+                      <button className={styles.minus}>-</button>
                       {user ? (
                         <button
                           className={styles.add}
-                          onClick={() => addToOrder(menu.id, menu.price)}
+                            onClick={() => addToOrder(menu.id, menu.price)}
                         >
                           +
                         </button>
                       ) : (
                         <></>
                       )}
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               );
@@ -254,6 +294,21 @@ export default function StorePageClient({ store, menus, menusCate }) {
           🛒 My cart{" "}
         </Link>
       </div>
+
+      {showModal && (
+        <ModalOrder
+          setShowModal={setShowModal}
+          selectedMenu={selectedMenu}
+          setSelectedMenu={setSelectedMenu}
+          note={note}
+          setNote={setNote}
+          countAdd={countAdd}
+          setCountAdd={setCountAdd}
+          user={user}
+          supabase={supabase}
+          store={store}
+        />
+      )}
     </div>
   );
 }

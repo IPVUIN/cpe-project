@@ -9,6 +9,31 @@
 .head span {
   color: gray;
 }
+.select {
+  background-color: #eaedf0;
+  display: flex;
+  padding: 5px;
+  gap: 5px;
+  margin: 10px 0;
+  border-radius: 10px;
+}
+.select button {
+  flex: 1;
+  background-color: #eaedf0;
+  font-size: 16px;
+  transition: all 0.2s ease;
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+
+}
+.select button:hover {
+  cursor: pointer;box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+.select .active {
+  background-color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
 .order {
   border-radius: 10px;
   margin-top: 15px;
@@ -37,8 +62,8 @@
 }
 .divimage {
   position: relative;
-  width: 90px;
-  height: 90px;
+  width: 150px;
+  height: 100px;
 }
 .image {
   object-fit: cover;
@@ -90,22 +115,4 @@
   font-size: 18px;
   font-weight: bold;
   height: fit-content;
-}
-.pending {
-  background-color: #cce5ff;
-  color: #004085;
-}
-
-.cooking {
-  background-color: #ffd19d;
-  color: rgb(231, 129, 12);
-}
-
-.finished {
-  background-color: #11be39;
-  color: #155724;
-}
-.cart{
-   background-color: #f8fafc;
-  color: rgb(231, 129, 12);
 }

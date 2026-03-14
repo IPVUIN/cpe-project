@@ -42,7 +42,7 @@ export default function LoginClient() {
   
     if (role === "customer") router.push("/");
     if (role === "store_owner") router.push("/HomeStore/");
-    if (role === "admin") router.push("/admin/panel");
+    if (role === "admin") router.push("/adminstoremanage/");
   }
 
   return (

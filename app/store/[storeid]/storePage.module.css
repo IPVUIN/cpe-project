@@ -1,7 +1,5 @@
-.container {
-  overflow: hidden;
-  padding: 20px;
-}
+
+
 .top {
   position: relative;
   height: 300px;
@@ -164,7 +162,7 @@
   background-color: rgb(0, 93, 146);
   cursor: pointer;
 }
-.minus {
+/* .minus {
   background-color: rgb(158, 0, 0);
   margin-right: 7px;
 }
@@ -172,7 +170,7 @@
 .minus:hover {
   background-color: rgb(129, 0, 0);
   cursor: pointer;
-}
+} */
 .bottom {
   display: flex;
   justify-content: flex-end;

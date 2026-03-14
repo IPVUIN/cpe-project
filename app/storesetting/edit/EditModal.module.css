@@ -1,0 +1,113 @@
+.Modal {
+  display: flex;
+  flex-direction: column;
+}
+.Modal h2 {
+  margin: 0;
+}
+.inputMenu {
+  display: flex;
+  flex-direction: column;
+  margin: 5px 0;
+  flex: 1;
+}
+.inputMenu input {
+  padding: 10px;
+  border-radius: 10px;
+  margin-top: 5px;
+  border: solid 1px #eee;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+.priceCat {
+  display: flex;
+  gap: 20px;
+}
+.inputMenu select {
+  padding: 10px;
+  border-radius: 10px;
+  margin-top: 5px;
+  border: solid 1px #eee;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+.divImage {
+  position: relative;
+  width: 200px;
+  aspect-ratio: 1 / 1;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 10px;
+}
+
+.imageMenu {
+  object-fit: cover;
+}
+.bottom button {
+  border: none;
+  padding: 10px;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+.bottom {
+  display: flex;
+  justify-content: flex-end;
+}
+.btnClose {
+  background: white;
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: none;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+.btnClose:hover {
+  cursor: pointer;
+  background-color: #eaedf0;
+}
+.btnSave {
+  background-color: rgb(0, 143, 226);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  color: white;
+  transition: all 0.2s ease;
+}
+.btnSave:hover {
+  background-color: rgb(0, 93, 146);
+  cursor: pointer;
+}
+.inputFile {
+  padding: 5px;
+  font-size: 16px;
+}
+.menucate {
+  background-color: #eee;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+.menucateadd {
+  display: flex;
+  flex-direction: column;
+  margin-top: 15px;
+}
+.menucateadd input {
+  border-radius: 10px;
+  font-size: 16px;
+  padding: 10px;
+}
+.menucateadd button {
+  margin-top: 10px;
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  background-color: rgb(0, 143, 226);
+  color: white;
+  transition: all 0.2s ease;
+}
+.menucateadd button:hover {
+  background-color: rgb(0, 93, 146);
+  cursor: pointer;
+}

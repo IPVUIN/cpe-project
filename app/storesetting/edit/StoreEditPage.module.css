@@ -1,0 +1,174 @@
+.top_edit {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+.top_edit h3,
+.top_edit h4 {
+  margin: 0;
+}
+.divimage {
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  height: 80%;
+  width: 100%;
+}
+
+.imagestore {
+  object-fit: cover;
+}
+.top_edit_detail {
+  display: flex;
+  margin-top: 10px;
+  gap: 20px;
+}
+
+.top_edit_left {
+  flex: 1;
+}
+.inputFile {
+  margin-top: 10px;
+  padding: 5px;
+  font-size: 16px;
+}
+
+.top_edit_name {
+  flex: 1;
+}
+.top_edit_name input,
+.top_edit_name textarea {
+  margin: 10px 0;
+  font-size: 18px;
+  border-radius: 10px;
+  padding: 10px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 100%;
+  box-sizing: border-box;
+  border: solid 1px black;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+.top_edit_name span {
+  font-size: 18px;
+}
+.top_edit_name div {
+  margin-bottom: 10px;
+}
+
+.bottom_edit {
+  display: flex;
+  justify-content: flex-end;
+}
+.bottom_edit button {
+  border: none;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 18px;
+  background-color: rgb(0, 143, 226);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  color: white;
+  transition: all 0.2s ease;
+}
+.bottom_edit button:hover {
+  background-color: rgb(0, 93, 146);
+  cursor: pointer;
+}
+.menu_list_top{
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  margin: 20px 0;
+}
+.menu_list_top h3{
+  margin: 0;
+}
+.menu_list_top button{
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+  font-size: 16px;
+  transition: all 0.2s ease;
+}
+.btnaddmenu{
+    background-color: #22c55e;
+  color: white;
+  margin-left: 10px;
+}
+.btnaddmenu:hover{
+    background-color: #009c39;
+cursor: pointer;
+}
+.btnaddcat{
+    background-color: #ee8700;
+  color: white;
+}
+.btnaddcat:hover{
+  background-color: #b46600;
+  cursor: pointer;
+}
+.menuTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.menuTable th {
+  text-align: left;
+  padding: 12px;
+  background: #f5f5f5;
+  font-weight: 600;
+}
+
+.menuTable td {
+  padding: 16px 12px;
+  border-bottom: 1px solid #eee;
+}
+.menuTable tr:hover {
+  background-color: #f5f5f5;
+}
+
+.tableImage {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.imagestore {
+  object-fit: cover;
+}
+
+.badge {
+  background: #e6eef7;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+}
+
+.price {
+  color: #22c55e;
+  font-weight: bold;
+}
+
+.editBtn {
+  margin-right: 8px;
+  background: #e6f0ff;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.deleteBtn {
+  background: #ffeaea;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.offMenu {
+  background-color: #f5f5f5;
+}

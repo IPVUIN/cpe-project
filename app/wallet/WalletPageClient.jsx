@@ -9,21 +9,39 @@ export default function walletPageClient() {
   const [wallet, setWallet] = useState(null);
   const [wallet_tran, setWallet_tran] = useState(null);
   const [user, setUser] = useState(null);
+  const [mounted, setMounted] = useState(false);
+  //const [balance, setB] = useState(null);
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
-      setUser(data.user);
-    });
+    setMounted(true);
   }, []);
   useEffect(() => {
+    async function loadUser() {
+      const { data: auth } = await supabase.auth.getUser();
+
+      const { data: profile } = await supabase
+        .from("users")
+        .select("*")
+        .eq("id", auth.user.id)
+        .single();
+      setUser(profile);
+    }
+    loadUser();
+  }, []);
+  useEffect(() => {
+    if (!user) return;
     async function loadWallet() {
-      const { data, error } = await supabase
+      const { data: wallet } = await supabase
         .from("wallet")
         .select("user_id,balance")
-        .single();
+        .eq("user_id", user.id)
+        .maybeSingle();
 
-      if (!error) setWallet(data);
+      if (wallet) {
+        setWallet(wallet);
+      }
+
       const { data: wt, error: wterror } = await supabase.from(
-        "wallet_transactions"
+        "wallet_transactions",
       ).select(`
     id,
     order_id,
@@ -44,28 +62,61 @@ export default function walletPageClient() {
       if (!wterror) setWallet_tran(wt);
     }
     loadWallet();
-  }, []);
+  }, [user]);
 
-  if (user === null) {
-    return <div className={"nologin"}>โปรดเข้าสู่ระบบ...</div>;
+  async function topup(amount) {
+    const { data: walletData, error } = await supabase
+      .from("wallet")
+      .select("*")
+      .eq("user_id", user.id)
+      .single();
+
+    if (error) {
+      alert("โหลด wallet ไม่สำเร็จ");
+      return;
+    }
+
+    const { data: updatedWallet, error: updateErr } = await supabase
+      .from("wallet")
+      .update({
+        balance: walletData.balance + amount,
+      })
+      .eq("user_id", user.id)
+      .select()
+      .single();
+
+    if (updateErr) {
+      alert("เติมเงินไม่สำเร็จ");
+      return;
+    }
+
+
+    setWallet(updatedWallet);
   }
 
   console.log("wallet", wallet);
   console.log("wallet t", wallet_tran);
+  if (!user) return <div>กำลังโหลด...</div>;
+
+  if (user.role !== "customer") {
+    return <div>ไม่มีสิทธิ์</div>;
+  }
+  if (!mounted) return null;
   return (
-    <div className={styles.container}>
+    <div>
       <h1>💸 My wallet</h1>
 
       <div className={styles.profile}>
         {wallet ? (
           <>
             <div className={styles.balance}>
-              <span>Current Balance</span>
-              <h1>{wallet.balance} บาท</h1>
+              <span>ยอดเงินปัจจุบัน</span>
+              <h1>฿{wallet.balance}</h1>
             </div>
 
             <div className={styles.uid}>
               <span>{wallet.user_id}</span>
+
               <div className={styles.studentid}>UID</div>
             </div>
           </>
@@ -76,9 +127,15 @@ export default function walletPageClient() {
 
       <h3>Quick Top-up</h3>
       <div className={styles.quicktopup}>
-        <div className={styles.topup}>10</div>
-        <div className={styles.topup}>50</div>
-        <div className={styles.topup}>100</div>
+        <div className={styles.topup} onClick={() => topup(10)}>
+          ฿10
+        </div>
+        <div className={styles.topup} onClick={() => topup(50)}>
+          ฿50
+        </div>
+        <div className={styles.topup} onClick={() => topup(100)}>
+          ฿100
+        </div>
       </div>
 
       <h3>History</h3>
@@ -110,9 +167,7 @@ export default function walletPageClient() {
                     </span>
                   </div>
 
-                  <div className={styles.history_amount}>
-                    -{item.amount} บาท
-                  </div>
+                  <div className={styles.history_amount}>- ฿{item.amount}</div>
                 </div>
               </div>
             ))

@@ -1,11 +1,7 @@
-.container {
-  overflow: hidden;
-  padding: 20px;
-}
 
 .profile {
   background-color: #3b72b2;
-  padding: 20px;
+  padding: 30px;
   color: white;
   border-radius: 25px;
   box-shadow: 0 2px 8px rgba(95, 153, 204, 0.15);
@@ -26,6 +22,7 @@
   align-items: center;
   font-size: 18x;
 }
+
 .studentid {
   background-color: rgb(95, 153, 204);
   color: white;
@@ -65,14 +62,16 @@
   margin-bottom: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
-.divimage{
-  position: relative;width: 80px;height: 80px;
+.divimage {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
 }
 .image {
   background-color: #3b72b2;
   object-fit: cover;
   border-radius: 10px;
-  
 }
 .history_text {
   margin-left: 15px;
@@ -89,15 +88,15 @@
   color: red;
   font-size: 20px;
 }
-.history_name { 
+.history_name {
   display: flex;
   flex-direction: column;
 }
-.history_name span{
+.history_name span {
   color: gray;
 }
-.notran{
-     color: gray;
+.notran {
+  color: gray;
   display: flex;
   justify-content: center;
   align-items: center;

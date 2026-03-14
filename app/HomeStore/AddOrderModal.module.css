@@ -1,0 +1,280 @@
+.Modal button{
+    border: none;
+  border-radius: 10px;
+  padding: 10px;
+}.modaltop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: -30px;
+  background-color: white;
+  z-index: 10;
+}
+
+.modalActions {
+  position: sticky;
+  bottom: -30px;
+  background: white;
+  padding: 10px 0 10px 0;
+}
+.totalOrder {
+  display: flex;
+  justify-content: space-between;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 0 0 7px 0;
+  transition: all 0.2s ease;
+  background-color: rgb(0, 143, 226);
+  color: white;
+}
+.totalOrder span {
+  font-weight: bold;
+}
+.totalOrder:hover {
+  background-color: rgb(0, 93, 146);
+  cursor: pointer;
+}
+.btncancel {
+  background: #eaedf0;
+}
+.btncancel:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  background-color: #eaedf0;
+  cursor: pointer;
+}
+.btnclose {
+  background: #eaedf0;
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  top: 15px;
+  right: 0px;
+}
+.btnclose:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  background-color: #eaedf0;
+  cursor: pointer;
+}
+.modalBox h2 {
+  margin: 0;
+}
+.modalmenucat {
+  padding: 10px 20px 0 20px;
+  background-color: #eaedf0;
+}
+.modalmenucat button {
+
+  background: white;
+  margin-right: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+.modalmenucat button:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+}
+.modalmenucat button.active {
+  background-color: #ff9800;
+  color: white;
+}
+.modalmenulist {
+  padding: 10px 20px;
+  background-color: #eaedf0;
+  /* border-radius: 5px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr)); */
+}
+
+.modalmenucard {
+  background-color: #f8fafc;
+  padding: 5px;
+  border-radius: 10px;
+  display: flex;
+  margin-bottom: 5px;
+  align-items: center;
+  border: solid 1px #ebedf0;
+  transition: all 0.2s ease;
+}
+.modalmenucard:hover {
+  border: solid 1px black;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+}
+.modalmenucard h4 {
+  margin: 0;
+}
+.modalmenucard span {
+  color: rgb(0, 207, 104);
+}
+.cardimage {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  overflow: hidden;
+  border-radius: 15px;
+  margin-right: 15px;
+}
+
+.imagemenu {
+  border-radius: 15px;
+  object-fit: cover;
+}
+
+.modalDetail {
+  flex: 1;
+}
+.modalDetail button {
+  border: none;
+  padding: 10px;
+  border-radius: 10px;
+  transition: all 0.2s ease;background-color: #eaedf0;
+}
+.modalDetailhead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #ebedf0;
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 10px;
+}
+.modalDetailhead h3 {
+  margin: 0;
+}
+.modalDetailhead span {
+  color: rgb(0, 207, 104);
+}
+
+.modalDetailtext {
+  margin-top: 10px;
+}
+.modalDetailtext textarea {
+  width: 100%;
+  max-width: 100%;
+  height: 100px;
+  border: #ebedf0 solid;
+  border-radius: 10px;
+  padding: 10px;
+  box-sizing: border-box;
+}
+.modalBottomMenu {
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  bottom: 0;
+  background: white;
+  padding-top: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+.modalBottomMenu button {
+  border: none;
+  padding: 10px;
+  transition: all 0.2s ease;
+  border-radius: 10px;
+}
+.modalBottomMenu button:hover {
+  cursor: pointer;
+}
+.modalMark {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+  gap: 10px;
+}
+.modalMark button {
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+.modalMark button:hover {
+  background-color: #e2e2e2;
+}
+.btnadd {
+  color: white;
+  background-color: rgb(0, 143, 226);
+  width: 100%;
+  font-size: 16px;
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+.btnadd:hover {
+  background-color: rgb(0, 93, 146);
+  cursor: pointer;
+}
+.btnadd:disabled {
+  background-color: rgb(172, 225, 255);
+}
+
+.modelmenucardlisted {
+  background-color: #f8fafc;
+  padding: 5px;
+  border-radius: 10px;
+  display: flex;
+  margin-bottom: 10px;
+
+  border: solid 1px #ebedf0;
+  transition: all 0.2s ease;
+}
+.modelmenucardlisted h4 {
+  margin: 0;
+}
+.modelmenucardlisted span {
+  color: rgb(0, 207, 104);
+}
+.modalcardlisted {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.deletedlist {
+  margin-left: auto;
+  margin-right: 10px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+.deletedlist:hover {
+  cursor: pointer;
+  background-color: #fdd2d2;
+}
+.modalCheckout {
+  position: sticky;
+  bottom: 0;
+  background: white;
+  padding: 10px 0;
+  margin-top: auto;
+}
+.modalDetaillisted {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.totalOrderlisted {
+  display: flex;
+  justify-content: space-between;
+  border-radius: 5px;
+  padding: 5px;
+  margin: 0 0 7px 0;
+  transition: all 0.2s ease;
+}
+.totalOrderlisted span {
+  font-weight: bold;
+  color: rgb(0, 207, 104);
+}
