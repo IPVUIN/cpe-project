@@ -5,18 +5,45 @@
     opacity: 50%;
 }
 .my_wallet {
-  background-color: #25a866;
+  background: linear-gradient(135deg, #08472a, #127c45);
   padding: 25px;
   margin: 20px 0;
   border-radius: 20px;
   color: white;
-  display: flex;
-  align-items: center;
   box-shadow: 0 2px 8px rgba(8, 233, 0, 0.15);
 }
 .my_wallet h3 {
   font-size: 40px;
   margin: 10px 0;
+}
+.my_wallet_detail{
+  display: flex;
+  justify-content: space-between;
+}
+.my_wallet_detail_left{
+display: flex;
+flex-direction: column;
+
+}
+.storename{
+  margin-bottom: 20px;
+  font-size: 24px;
+}
+.uid{
+  padding: 7px;
+  background-color: #1c9c5a;
+  border-radius: 50%;
+  margin-right: 10px;
+  transition: all 0.2s ease;
+}
+.uid:hover{
+  background-color: #68a586;
+  cursor: pointer;
+}
+.my_wallet_detail_right{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
 }
 .content {
   display: flex;
@@ -30,14 +57,7 @@
   border-radius: 10px;
   padding: 10px;
 }
-.request {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  padding: 20px;
-  flex: 1;
-  background-color: white;
-  border-radius: 20px;
-  max-height: fit-content;
-}
+
 .request input {
   border: solid 1px #eee;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
@@ -45,6 +65,7 @@
   font-size: 16px;
   padding: 10px;
   transition: all 0.2s ease;
+    box-sizing: border-box;
 }
 .request input:hover {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
@@ -69,10 +90,11 @@
 .request_bank_detail {
   display: flex;
   margin: 10px 0;
-  gap: 20px;
+  gap: 10px;
 }
 .request_bank_detail input {
   margin-top: 10px;
+
 }
 .request_bank_detail div {
   display: flex;
@@ -92,24 +114,66 @@
 
   color: gray;
 }
+.btn_withdraw{
+  background-color: rgb(236, 154, 0);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 20px;
+}
+.btn_withdraw:hover{
+  background-color: rgb(248, 164, 9);
+
+}
 .btn_req {
   background-color: rgb(0, 143, 226);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   color: white;
-  transition: all 0.2s ease;
   width: 100%;
-  margin-top: 10px;
+  margin-top: 20px;
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+
 }
 .btn_req:hover {
   background-color: rgb(0, 93, 146);
+}
+.income{
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  padding: 20px;
+  flex: 1;
+  background-color: white;
+  border-radius: 20px;max-height: fit-content;
+}
+.income_content{
+  margin-top: 10px;
+}
+.income_card{
+   display: flex;
+  border-radius: 20px;
+  padding: 15px;
+  justify-content: space-between;
+  align-items: center;
+  border: solid 1px #eee;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  margin: 10px 0;
+}
+.income_card_left{
+  display: flex;
+  flex-direction: column;
+}
+.income_card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   cursor: pointer;
 }
 .history {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   padding: 20px;
-  flex: 1;
+  flex: 2;
   background-color: white;
-  border-radius: 20px;
+  border-radius: 20px;max-height: fit-content;
 }
 .history_select {
   background-color: #eaedf0;
@@ -148,7 +212,7 @@
 }
 .history_card:hover {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  cursor: pointer;
+  
 }
 .history_card div {
   display: flex;

@@ -24,7 +24,7 @@ export default function StorePageClient({ store, menus, menusCate }) {
   const [showModal, setShowModal] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState(null);
   const [note, setNote] = useState("");
-  const [countAdd, setCountAdd] = useState(0);
+  const [countAdd, setCountAdd] = useState(1);
   const [OrderTotal, setOrderTotal] = useState(0);
   const [countList, setCountList] = useState(0);
   // console.log("s", sortedMenus);

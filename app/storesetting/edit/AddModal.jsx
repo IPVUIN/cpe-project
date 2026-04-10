@@ -14,7 +14,8 @@ export default function AddModal({
   setAddPrice,
   addCategory,
   setAddCategory,
-  handleAddMenu,setSelectedFile
+  handleAddMenu,
+  setSelectedFile,
   //   editName,
   //   setEditName,
   //   editPrice,
@@ -55,15 +56,19 @@ export default function AddModal({
         </button>
         <div className={styles.inputMenu}>
           <span>ชื่อเมนู</span>
-          <input value={addName} onChange={(e) => setAddName(e.target.value)}  placeholder="กรอกชื่อเมนู" />
+          <input
+            value={addName}
+            onChange={(e) => setAddName(e.target.value)}
+            placeholder="กรอกชื่อเมนู"
+          />
         </div>
         <div className={styles.priceCat}>
           <div className={styles.inputMenu}>
             <span> ราคา</span>
             <input
-              type="number"
+              type="text"
               value={addPrice}
-              onChange={(e) => setAddPrice(e.target.value)}
+              onChange={(e) => setAddPrice(e.target.value.replace(/\D/g, ""))}
               placeholder="กรอกราคา"
             />
           </div>

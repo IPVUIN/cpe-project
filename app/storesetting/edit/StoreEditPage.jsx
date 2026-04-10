@@ -65,7 +65,7 @@ export default function StoreEditPage() {
     async function loadCategory() {
       const { data: category } = await supabase
         .from("menu_category")
-        .select("*")
+        .select("*,menus(*)")
         .eq("store_id", dataStore.id);
 
       setMenuCate(category);
@@ -143,7 +143,6 @@ export default function StoreEditPage() {
     const { error } = await supabase
       .from("stores")
       .update({
-        name: storeName,
         description: storeDesc,
         image_url: publicUrl,
       })
@@ -221,6 +220,10 @@ export default function StoreEditPage() {
     loadMenu();
   }
   async function handleAddCate() {
+    if (!addNameCate) {
+      alert("กรุณากรอกชื่อหมวดหมู่");
+      return;
+    }
     const { data, error: cateErr } = await supabase
       .from("menu_category")
       .insert({
@@ -327,9 +330,19 @@ export default function StoreEditPage() {
       <h2>จัดการเมนู ร้านค้า</h2>
       {dataStore && (
         <div className={styles.top_edit}>
-          <h3>ข้อมูลร้านค้า</h3>
+          <span className={styles.top_edit_storename}>
+            <b>ข้อมูลร้านค้า</b> <span>{storeName}</span>
+          </span>
+          <hr />
           <div className={styles.top_edit_detail}>
-            <div className={styles.top_edit_left}>
+            <div className={styles.top_edit_name}>
+              <span>คำอธิบายร้านค้า</span>
+              <textarea
+                value={storeDesc}
+                onChange={(e) => setStoreDesc(e.target.value)}
+              />
+            </div>
+            <div className={styles.top_edit_image}>
               <div className={styles.divimage}>
                 <Image
                   src={previewUrl || dataStore?.image_url || "/iconmain.png"}
@@ -344,23 +357,6 @@ export default function StoreEditPage() {
                 className={styles.inputFile}
               />{" "}
             </div>
-            <div className={styles.top_edit_name}>
-              <div>
-                <span>ชื่อร้านค้า</span> <br />
-                <input
-                  type="text"
-                  value={storeName}
-                  onChange={(e) => setStoreName(e.target.value)}
-                />
-              </div>
-              <div>
-                <span>คำอธิบายร้านค้า</span> <br />
-                <textarea
-                  value={storeDesc}
-                  onChange={(e) => setStoreDesc(e.target.value)}
-                />
-              </div>
-            </div>
           </div>
           <div className={styles.bottom_edit}>
             <button onClick={handleSave}>บันทึกข้อมูล</button>
@@ -368,7 +364,7 @@ export default function StoreEditPage() {
         </div>
       )}
       <div className={styles.menu_list_top}>
-        <h3>รายการเมนูอาหาร</h3>
+        <h3>รายการเมนูอาหาร - {menus?.length} เมนู</h3>
         <div>
           <button onClick={handleCate} className={styles.btnaddcat}>
             เพิ่มหมวดหมู่
@@ -492,6 +488,7 @@ export default function StoreEditPage() {
         <AddCate
           setShowModalCate={setShowModalCate}
           menuCate={menuCate}
+          setMenuCate={setMenuCate}
           addNameCate={addNameCate}
           setAddNameCate={setAddNameCate}
           handleAddCate={handleAddCate}

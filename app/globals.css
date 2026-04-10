@@ -33,6 +33,10 @@ a {
 
 button {
   font-family: var(--font-prompt);
+  transition: all 0.2s ease;
+}
+button:hover {
+  cursor: pointer;
 }
 input {
   font-family: var(--font-prompt);
@@ -65,22 +69,34 @@ textarea {
   color: #004085;
   background-color: #cce5ff;
 }
+.pendingicon{
+  background-color: #004085;
+}
 .cooking {
   color: rgb(231, 129, 12);
+}
+.cookingicon  {
+  background-color: rgb(231, 129, 12);
 }
 .cookingbg {
   color: rgb(231, 129, 12);
   background-color: #ffd19d;
 }
 .ready {
-  color: #6a7c00;
+  color: #21b897;
+}
+.readyicon  {
+  background-color: #21b897;
 }
 .readybg {
-  color: #6a7c00;
-  background-color: #f0f8c4;
+  color: #21b897;
+  background-color: #c6fff3;
 }
 .finished {
   color: #155724;
+}
+.finishedicon {
+  background-color: #155724;
 }
 .finishedbg {
   background-color: #97f8ae;
@@ -100,4 +116,68 @@ textarea {
 .rejectedbg {
   color: #b8002e;
   background-color: #ffb0c4;
+}
+
+.price{
+   color: #00c261;
+}
+hr{
+  width: 100%;
+}
+.createdat{
+  opacity: 50%;
+}
+.qty{
+  font-weight: bold;
+  color: #0096d1;
+}.note{
+  color: #e07800;
+}
+
+.accept {
+  background: #28a745;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+.accept:hover{
+  background: #1c9c3a;
+}
+.done {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+.done:hover{
+    background: #005abb;
+}
+
+.cancel {
+  background: #dc3545;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 8px;
+
+}
+.cancel:hover{
+    background: #b62432;
+}
+.option {
+  font-size: 12px;
+  color: #64748b;
+  margin-left: 4px;
+}
+
+.note {
+  font-size: 12px;
+  color: #0f172a;
+  background: #f1f5f9;
+  padding: 4px 8px;
+  border-radius: 8px;
+  margin-top: 4px;
+  width: fit-content;
 }

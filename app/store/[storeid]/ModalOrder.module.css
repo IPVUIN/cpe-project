@@ -1,10 +1,7 @@
-.Modal button{
-    border: none;
+.Modal button {
+  border: none;
   border-radius: 10px;
   padding: 10px;
-}
-.Modal button:hover{
-cursor: pointer;
 }
 
 .modalDetail {
@@ -14,13 +11,14 @@ cursor: pointer;
   border: none;
   padding: 10px;
   border-radius: 10px;
-  transition: all 0.2s ease;background-color: #eaedf0;
+  transition: all 0.2s ease;
+  background-color: #eaedf0;
 }
 .modalDetailhead {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: #ebedf0;
+
   padding: 10px;
   margin-top: 10px;
   border-radius: 10px;
@@ -44,6 +42,13 @@ cursor: pointer;
   padding: 10px;
   box-sizing: border-box;
 }
+.choice {
+  display: flex;
+  flex-direction: column;
+}
+.radio {
+  margin: 5px 0;
+}
 .modalBottomMenu {
   display: flex;
   flex-direction: column;
@@ -59,9 +64,6 @@ cursor: pointer;
   padding: 10px;
   transition: all 0.2s ease;
   border-radius: 10px;
-}
-.modalBottomMenu button:hover {
-  cursor: pointer;
 }
 .modalMark {
   display: flex;
@@ -109,5 +111,4 @@ cursor: pointer;
 .btnClose:hover {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   background-color: #eaedf0;
-  cursor: pointer;
 }

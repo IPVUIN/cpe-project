@@ -85,7 +85,7 @@ export default function StoreSettingPage() {
               <p>{dataStore.description}</p>
             </div>
             <div>
-              <Link href="/storesetting/edit" className={styles}>
+              <Link href="/storesetting/edit" className="done">
                 แก้ไขร้านค้า
               </Link>
             </div>
@@ -115,7 +115,7 @@ export default function StoreSettingPage() {
       </div>
 
       <div className={styles.listmenu}>
-        <h2>Menu</h2>
+        <h2>เมนู</h2>
         <div className={styles.menu}>
           {sortedMenus?.length > 0 &&
             sortedMenus?.map((menu) => {
