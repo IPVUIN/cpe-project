@@ -81,22 +81,48 @@
   padding: 5px;
   font-size: 16px;
 }
-.menucate {
-  background-color: #eee;
-  padding: 10px;
+.menucate_div{
+  margin: 10px 0;
+}
+.menucate_sec{
   border-radius: 10px;
-  margin-bottom: 5px;
+  overflow: hidden;
+  margin-top: 10px;
+}
+.menucate {
+  background-color: rgb(243, 243, 243);
+  border: 1px solid #eee;
+  padding: 7px 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+.menucate:hover{
+  background-color: rgb(252, 219, 182);
+}
+.menucate button{
+  border: none;
+
 }
 .menucateadd {
   display: flex;
   flex-direction: column;
-  margin-top: 15px;
+  margin-top: 10px;
 }
 .menucateadd input {
   border-radius: 10px;
   font-size: 16px;
   padding: 10px;
+  border: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border: 1px solid #eee;
+margin-bottom: 10px;
+transition: all 0.2s ease;
+}
+.menucateadd input:hover{
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 .menucateadd button {
   margin-top: 10px;

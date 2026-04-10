@@ -74,21 +74,28 @@ export default function OrderDetailPageClient({ orderid, sel }) {
         .from("orders")
         .select(
           `
-  id,
-  stores(id,name,image_url,user_id),
-  total_price,
-  status,
-  created_at,
-   orders_details(
-      id,
-      quantity,
-      subtotal,
-      menus(
-        name,
-        price
-      )
-    )
-`,
+        id,
+        total_price,
+        created_at,
+        order_stores (
+          id,
+          store_id,
+          order_id,
+          store_total,
+          stores(name,image_url,user_id),
+          status,
+          orders_details (
+            id,
+            order_stores_id,
+            quantity,
+            price,
+            subtotal,
+            note,
+            option,
+            menus(name,price)
+          )
+        )
+      `,
         )
         .eq("id", orderid)
         .single();
@@ -98,58 +105,80 @@ export default function OrderDetailPageClient({ orderid, sel }) {
 
     loadOrders();
   }, [user]);
-  async function UpdateOrder(orderData) {
-    const { error } = await supabase
-      .from("orders")
-      .update({ status: "finished" })
-      .eq("id", orderData.id);
+  console.log(orders);
+  async function UpdateOrder(orderData, storeOrder) {
+    console.log("orderData", orderData);
+    console.log("storeOrder", storeOrder);
+    // const { error } = await supabase
+    //   .from("orders")
+    //   .update({ status: "finished" })
+    //   .eq("id", orderData.id);
 
-    if (error) {
-      alert(error.message);
-      return;
-    }
+    // if (error) {
+    //   alert(error.message);
+    //   return;
+    // }
 
-    setOrders((prev) => ({
-      ...prev,
-      status: "finished",
-    }));
+    // setOrders((prev) => ({
+    //   ...prev,
+    //   status: "finished",
+    // }));
 
     const { data: walletData, error: walletError } = await supabase
       .from("wallet")
       .select("user_id,balance")
-      .eq("user_id", orderData.stores.user_id)
-      .single();
+      .eq("user_id", storeOrder.stores.user_id)
+      .maybeSingle();
 
     if (walletError) {
       console.log(walletError);
       return;
     }
-
+    console.log("walletData", walletData);
     const newBalance = walletData.balance + orderData.total_price;
 
-    console.log("walletData", walletData);
-    console.log("newBalance", newBalance);
-    const { error: walletErr } = await supabase
-      .from("wallet")
-      .update({ balance: newBalance })
-      .eq("user_id", orderData.stores.user_id);
+    // console.log("walletData", walletData);
+    // console.log("newBalance", newBalance);
+    // const { error: walletErr } = await supabase
+    //   .from("wallet")
+    //   .update({ balance: newBalance })
+    //   .eq("user_id", orderData.stores.user_id);
 
-    if (walletErr) {
-      console.log(walletErr);
-    }
-    const { data: tx, error: txErr } = await supabase
-      .from("wallet_transactions")
-      .insert({
-        user_id: user.id,
-        order_id: orderData.id,
-        type: "payment",
-        amount: orderData.total_price,
-      });
+    // if (walletErr) {
+    //   console.log(walletErr);
+    // }
+    // const { data: tx, error: txErr } = await supabase
+    //   .from("wallet_transactions")
+    //   .insert({
+    //     user_id: user.id,
+    //     order_id: orderData.id,
+    //     type: "payment",
+    //     amount: orderData.total_price,
+    //   });
 
-    if (txErr) {
-      console.log(txErr);
+    // if (txErr) {
+    //   console.log(txErr);
+    // }
+    // console.log("tx:", tx);
+  }
+
+  async function finishOrder(storeOrder) {
+    const { error } = await supabase.rpc("finish_order_store", {
+      p_order_store_id: storeOrder.id, // สำคัญ!
+    });
+
+    if (error) {
+      alert(error.message);
+    } else {
+      alert("รับอาหารเรียบร้อยแล้ว");
     }
-    console.log("tx:", tx);
+
+    setOrders((prev) => ({
+      ...prev,
+      order_stores: prev.order_stores.map((os) =>
+        os.id === storeOrder.id ? { ...os, status: "finished" } : os,
+      ),
+    }));
   }
   // render ทีหลัง
   //console.log("order", orders);
@@ -160,46 +189,63 @@ export default function OrderDetailPageClient({ orderid, sel }) {
   }
   if (!mounted) return null;
   return (
-    <div className={styles.container}>
-      <div className={styles.head}>
-        <Link className={styles.backshop} href="/orders">
-          ⬅
+    <div>
+      <div className={styles.summary_box}>
+        <Link href="/orders" className={styles.back}>
+          ⬅ กลับ
         </Link>
-        <h1>Order#{orderid}</h1>
-      </div>
-      <div className={styles.content}>
-        <div className={`${styles.status} ${orders.status}bg`}>
-          <span>- {orders.status} -</span>
-        </div>{" "}
-        <div className={styles.detail}>
-          <span>
-            {" "}
-            จากร้าน - <b>{orders.stores?.name}</b>
-          </span>
-          <h3>Order summmary</h3>
-          {orders.orders_details?.map((item, idx) => (
-            <div key={idx}>
-              <div className={styles.listmenu}>
-                <span>
-                  {item.quantity} x {item.menus.name}
-                </span>
-                <span>฿{item.subtotal}</span>
-              </div>
-              <hr />
+        <h3>Order #{orders.id}</h3>
+        <hr />
+        {orders?.order_stores?.map((store) => (
+          <div key={store.id} className={styles.store_section}>
+            {/* ชื่อร้าน */}
+            <div className={styles.head}>
+              <b>{store.stores.name}</b>{" "}
+              <span className={`${store.status}bg ${styles.status}`}>
+                {store.status}
+              </span>
             </div>
-          ))}
-          <div className={styles.total}>
-            <span>Total</span>
-            <span className={styles.totalprice}>฿{orders.total_price}</span>
+
+            {/* รายการอาหาร */}
+
+            {store.orders_details?.map((od) => (
+              <div className={styles.item_row} key={od.id}>
+                <div className="qty">{od.quantity}</div>
+
+                <div>
+                  {od.menus.name}{" "}
+                  {od.note && <span className="note">{od.note}</span>}
+                  {od.option &&
+                    Object.values(od.option)
+                      .filter((opt) => opt.label !== "ไม่เพิ่ม")
+                      .map((opt, i) => (
+                        <div key={i} className="option">
+                          - {opt.label}
+                          {opt.price > 0 && ` (+${opt.price}฿)`}
+                        </div>
+                      ))}
+                </div>
+
+                <div>฿{od.subtotal}</div>
+              </div>
+            ))}
+
+            <div className={styles.store_total}>
+              <span>฿{store.store_total}</span>
+            </div>
+            {/* {store.status === "ready" && (
+              <button className="accept" onClick={() => finishOrder(store)}>
+                รับอาหารแล้ว
+              </button>
+            )} */}
+            <hr />
           </div>
-          {orders.status === "ready" && (
-            <button
-              className={styles.btnaccept}
-              onClick={() => UpdateOrder(orders)}
-            >
-              รับอาหาร
-            </button>
-          )}
+        ))}
+
+        {/* Total */}
+        <div className={styles.total_row}>
+          <b>ยอดสุทธิ (Total)</b>
+          <b className="price">฿{orders?.total_price}</b>
         </div>
       </div>
     </div>

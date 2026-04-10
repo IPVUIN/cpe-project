@@ -5,16 +5,16 @@ import Image from "next/image";
 import styles from "@/app/ordercart/orderCartPage.module.css";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabaseClient";
-import { useRouter } from "next/navigation";
 import CartControl from "./CartControl";
+import { checkout } from "./checkout";
+import { useRouter } from "next/navigation";
 
 export default function OrderCartPageClient() {
   const [user, setUser] = useState(null);
   const [ordersCart, setOrdersCart] = useState(null);
-  const router = useRouter();
   const [wallet, setWallet] = useState(0);
   const [mounted, setMounted] = useState(false);
-
+  const router = useRouter();
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -56,9 +56,12 @@ export default function OrderCartPageClient() {
           stores(name,image_url),
           orders_details (
             id,
+            order_stores_id,
             quantity,
             price,
             subtotal,
+            note,
+            option,
             menus(name,image_url,price)
           )
         )
@@ -66,6 +69,8 @@ export default function OrderCartPageClient() {
         )
         .eq("user_id", user.id)
         .eq("status", "cart")
+        .order("id", { foreignTable: "order_stores" })
+        .order("id", { foreignTable: "order_stores.orders_details" })
         .maybeSingle();
 
       if (orderError) {
@@ -79,39 +84,6 @@ export default function OrderCartPageClient() {
   }, [user]);
   console.log("orderCart", ordersCart);
 
-  async function loadOrders() {
-    const { data, error } = await supabase
-      .from("orders")
-      .select(
-        `
-      id,
-      total_price,
-      order_stores (
-        id,
-        store_id,
-        store_total,
-        stores(name,image_url),
-        orders_details (
-          id,
-          quantity,
-          price,
-          subtotal,
-          menus(name,image_url,price)
-        )
-      )
-    `,
-      )
-      .eq("user_id", user?.id)
-      .eq("status", "cart")
-      .maybeSingle();
-
-    if (error) {
-      console.log(error);
-      return;
-    }
-
-    setOrdersCart(data);
-  }
   // render ทีหลัง
   if (!user) return <div>กำลังโหลด...</div>;
 
@@ -124,8 +96,8 @@ export default function OrderCartPageClient() {
     <div>
       <div className={styles.head}>
         <div>
-          <h1>🍔 My Cart</h1>
-          <span>All orders</span>
+          <h1>🛒 ตะกร้าของฉัน</h1>
+          <span>ออเดอร์ในตะกร้า</span>
         </div>
 
         <div className={styles.top_wallet}>
@@ -135,7 +107,9 @@ export default function OrderCartPageClient() {
         </div>
       </div>
       <h3>ตะกร้า</h3>
-      {!ordersCart && <div className={styles.nomenu}>ตะกร้าว่างเปล่า</div>}
+      {(!ordersCart || ordersCart.order_stores?.length === 0) && (
+        <div className={styles.nomenu}>ตะกร้าว่างเปล่า</div>
+      )}
       {user?.role === "customer" && (
         <>
           {ordersCart?.order_stores?.map((store) => (
@@ -166,84 +140,48 @@ export default function OrderCartPageClient() {
               </div>
 
               <div className={styles.order_cart_menus}>
-                {store.orders_details?.map((item) =>
-                  item.quantity !== 0 ? (
-                    <div
-                      key={item.id}
-                      className={styles.order_cart_menu_single}
-                    >
-                      <CartControl
-                        supabase={supabase}
-                        item={item}
-                        loadOrders={loadOrders}
-                      />
-                      {/* {item.quantity > 1 ? (
-                            <button
-                              onClick={() =>
-                                Minusmenu(
-                                  item.id,
-                                  item.quantity,
-                                  item.menus.price,
-                                )
-                              }
-                              className={styles.minus}
-                            >
-                              -
-                            </button>
-                          ) : (
-                            <button
-                              onClick={() =>
-                                Delmenu(item.id, item.menus.price, store.id)
-                              }
-                              className={styles.del}
-                            >
-                              <div className={styles.divDel}>
-                                <Image
-                                  src="/trash.png"
-                                  className={styles.image}
-                                  fill
-                                  alt="image_del"
-                                />
-                              </div>
-                            </button>
-                          )}
-
-                          <button
-                            onClick={() =>
-                              Addmenu(item.id, item.quantity, item.menus.price)
-                            }
-                            className={styles.add}
-                          >
-                            +
-                          </button> */}
-                    </div>
-                  ) : null,
+                {store.orders_details?.map(
+                  (item) =>
+                    item.quantity !== 0 && (
+                      <div
+                        key={item.id}
+                        className={styles.order_cart_menu_single}
+                      >
+                        <CartControl
+                          supabase={supabase}
+                          item={item}
+                          setOrdersCart={setOrdersCart}
+                          ordersCart={ordersCart}
+                          storeId={store.id}
+                        />
+                      </div>
+                    ),
                 )}
               </div>
 
               <div className={styles.order_cart_total}>
-                <h4>
-                  รวมร้านนี้ {store.store_total}
-                  บาท
-                </h4>
+                <h4>รวม ฿{store.store_total}</h4>
               </div>
             </div>
           ))}
-          {ordersCart && (
+          {ordersCart?.order_stores.length > 0 && (
             <>
               <div className={styles.order_cart_total}>
-                {/* <h3>รวมทั้งหมด {ordersCart?.total_price} บาท</h3> */}
+                <h3>รวมทั้งหมด ฿{ordersCart?.total_price}</h3>
               </div>
 
               <div className={styles.order_cart_checkout}>
                 <button
-                // onClick={()=>checkout(
-                //   user.id,
-                //   ordersCart.id,
-                //   ordersCart.total_price,
-                // )}
+                  onClick={() =>
+                    checkout(
+                      user.id,
+                      ordersCart.id,
+                      ordersCart.total_price,
+                      router,
+                    )
+                  }
                 >
-                  Checkout!
+                  สั่งซื้อเลย!
                 </button>
               </div>
             </>

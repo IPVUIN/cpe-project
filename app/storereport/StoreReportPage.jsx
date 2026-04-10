@@ -171,41 +171,27 @@ export default function StoreReportPage() {
       }
 
       const { data, count } = await supabase
-        .from("orders")
-        .select("total_price", { count: "exact" })
+        .from("order_stores")
+        .select(
+          `
+    store_total,
+    orders!inner(id,created_at,status),
+    orders_details(*,menus(*))
+  `,
+          { count: "exact" },
+        )
         .eq("store_id", store.id)
         .eq("status", "finished")
-        .gte("created_at", start.toISOString())
-        .lte("created_at", end.toISOString());
-
-      const total = data?.reduce((sum, o) => sum + o.total_price, 0) || 0;
+        .gte("orders.created_at", start.toISOString())
+        .lte("orders.created_at", end.toISOString());
+      const total = data?.reduce((sum, o) => sum + o.store_total, 0) || 0;
 
       setTotalSales(total);
       setOrdersCount(count);
-
-      const { data: topMenu } = await supabase
-        .from("orders")
-        .select(
-          `
-        orders_details (
-          quantity,
-          subtotal,
-          menus (
-            id,
-            name,
-            image_url
-          )
-        )
-      `,
-        )
-        .eq("store_id", store.id)
-        .eq("status", "finished")
-        .gte("created_at", start.toISOString())
-        .lte("created_at", end.toISOString());
-      setTopMenu(topMenu);
+      setTopMenu(data);
       const menuSummary = {};
 
-      topMenu?.forEach((order) => {
+      data?.forEach((order) => {
         order.orders_details.forEach((od) => {
           const menuId = od.menus.id;
 
@@ -330,10 +316,19 @@ export default function StoreReportPage() {
           {topMenu?.map((tm, idx) => (
             <div key={tm.id} className={styles.topsell_card}>
               <div className={styles.topsell_card_left}>
-                <h3 className={idx+1 === 1 ? styles.firstMenu :idx+1 === 2 ?styles.secondMenu:idx+1 === 3 ?styles.thirdMenu:""}>
-                  #{idx+1}
+                <h3
+                  className={
+                    idx + 1 === 1
+                      ? styles.firstMenu
+                      : idx + 1 === 2
+                        ? styles.secondMenu
+                        : idx + 1 === 3
+                          ? styles.thirdMenu
+                          : ""
+                  }
+                >
+                  #{idx + 1}
                 </h3>
-                
                 <div className={styles.divimage}>
                   <Image
                     src={tm.img || "/iconmain.png"}

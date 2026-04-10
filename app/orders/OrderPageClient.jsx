@@ -8,10 +8,11 @@ import { supabase } from "@/lib/supabaseClient";
 
 export default function OrderCartPageClient() {
   const [user, setUser] = useState(null);
-  const [myOrders, setMyOrders] = useState(null);
+  const [orders, setOrders] = useState(null);
+ // const [myOrders, setMyOrders] = useState(null);
   const [myCooking, setMyCooking] = useState(null);
   const [myReady, setMyReady] = useState(null);
-  const [myFinished, setMyFinished] = useState(null);
+  const [myCompleted, setMyCompleted] = useState(null);
   // const [store, setStore] = useState(null);
   const [selectStatus, setSelectStatus] = useState(0);
   const [mounted, setMounted] = useState(false);
@@ -71,78 +72,99 @@ export default function OrderCartPageClient() {
         .from("orders")
         .select(
           `
-  id,
-  stores(id,name,image_url),
-  total_price,
-  status,
-  created_at,
-   orders_details(
-      id,
-      quantity,
-      subtotal,
-      menus(
-        name,
-        price
-      )
-    )
-`,
+        id,
+        total_price,
+        created_at,
+        status,
+        order_stores (
+          id,
+          store_id,
+          order_id,
+          store_total,
+          stores(name,image_url),
+          status,
+          orders_details (
+            id,
+            order_stores_id,
+            quantity,
+            price,
+            subtotal,
+            note,
+            menus(name,price)
+          )
+        )
+      `,
         )
         .eq("user_id", user.id)
         .neq("status", "cart")
         .order("created_at", { ascending: false });
 
-      // setOrders(orders);
-      setMyOrders(orders.filter((o) => o.status === "pending"));
-      setMyCooking(orders.filter((o) => o.status === "cooking"));
-      setMyReady(orders.filter((o) => o.status === "ready"));
-      setMyFinished(orders.filter((o) => o.status === "finished"));
+      setOrders(orders.filter((o) => o.status === "active"));
+      // const pendingStores = orders
+      //   .flatMap((order) => order.order_stores)
+      //   .filter((o) => o.status === "pending");
+
+      // setMyOrders(pendingStores);
+      // setMyCooking(orders.filter((o) => o.status === "cooking"));
+      // setMyReady(orders.filter((o) => o.status === "ready"));
+      setMyCompleted(orders.filter((o) => o.status === "completed"));
     }
 
     loadOrders();
   }, [user]);
-
+  console.log("Orders", orders);
+  console.log("myCompleted", myCompleted);
   function OrderCard({ oc }) {
     return (
-      <Link className={styles.order_card} href={`/orders/${oc.id}`}>
-        {" "}
-        <div className={styles.divimage}>
-          <Image
-            src={oc.stores.image_url}
-            className={styles.image}
-            fill
-            alt="image_shop"
-          />
-        </div>
-        <div className={styles.order_card_text}>
-          <div className={styles.order_card_head}>
-            <div>
-              <h4>{oc.stores.name}</h4>
-              <span>
-                {new Date(oc.created_at).toLocaleString("th-TH", {
-                  dateStyle: "short",
-                  timeStyle: "short",
-                })}{" "}
-                - Order#{oc.id}
-              </span>
-            </div>
-            <div className={`${styles.order_status} ${oc.status}bg`}>
-              {oc.status}
-            </div>
+      <div className={styles.order_card}>
+        {/* Header */}
+        <div className={styles.order_header}>
+          <div>
+            <h4>Order #{oc.id}</h4>
+            <span className={styles.time}>
+              {" "}
+              {new Date(oc.created_at).toLocaleString("th-TH", {
+                dateStyle: "short",
+                timeStyle: "short",
+              })}{" "}
+            </span>
           </div>
 
-          <div className={styles.order_card_menus}>
-            {oc.orders_details.map((item, idx) => (
-              <span key={idx}>
-                {item.quantity}x {item.menus.name} <span>{item.note}</span>
-                {idx !== oc.orders_details.length - 1 && ", "}
-              </span>
-            ))}
-          </div>
-          <div className={styles.order_card_price}>
-            <h4>฿{oc.total_price}</h4>
-          </div>
+          {/* <div className={styles.status}>กำลังดำเนินการ</div> */}
         </div>
-      </Link>
+
+        {/* Store */}
+        {oc.order_stores.map((os) => (
+          <div key={os.id} className={styles.store_box}>
+            <div className={styles.store_info}>
+              <div className={styles.store_image}>
+                <Image
+                  src={os.stores.image_url}
+                  fill
+                  alt="store"
+                  className={styles.image}
+                />
+              </div>
+
+              <div className={styles.store_text}>
+                <b>{os.stores.name}</b>
+                <span>รวมทั้งหมด {os.orders_details.length} รายการ</span>
+              </div>
+            </div>
+            <div className={styles.store_status}>
+              <span className={`${os.status}bg`}>{os.status}</span>
+            </div>
+          </div>
+        ))}
+
+        {/* Footer */}
+        <div className={styles.order_footer}>
+          <b className="price">รวม ฿{oc.total_price}</b>
+          <Link href={`/orders/${oc.id}`} className={styles.detail}>
+            ดูรายละเอียด →
+          </Link>
+        </div>
+      </div>
     );
   }
 
@@ -162,26 +184,26 @@ export default function OrderCartPageClient() {
   if (!mounted) return null;
   //console.log("order", orders);
   return (
-    <div className={styles.container}>
+    <div>
       <div className={styles.head}>
-        <h1>🍔 My order</h1>
-        <span>All orders</span>
+        <h1>🍔 ออเดอร์ของฉัน</h1>
+        <span>รายการออเดอร์</span>
       </div>
 
       <div className={styles.select}>
         <button
-          className={selectStatus === 0 ? `${styles.active} pending` : ""}
+          className={selectStatus === 0 ? `${styles.active} cooking` : ""}
           onClick={() => setSelectStatus(0)}
         >
-          📑 รอดำเนินการ
+          📑 กำลังดำเนินการ
         </button>
         <button
-          className={selectStatus === 1 ? `${styles.active} cooking` : ""}
+          className={selectStatus === 1 ? `${styles.active} finished` : ""}
           onClick={() => setSelectStatus(1)}
         >
-          👨‍🍳 กำลังทำ
+          ✅ ประวัติ
         </button>
-        <button
+        {/* <button
           className={selectStatus === 2 ? `${styles.active} ready` : ""}
           onClick={() => setSelectStatus(2)}
         >
@@ -192,14 +214,14 @@ export default function OrderCartPageClient() {
           onClick={() => setSelectStatus(3)}
         >
           ✅ เสร็จสิ้น
-        </button>
+        </button> */}
       </div>
       <div className={styles.order}>
         {/* {orders.length === 0 && <div>ไม่มีคำสั่งซื้อ</div>} */}
-        {selectStatus === 0 && renderOrders(myOrders)}
-        {selectStatus === 1 && renderOrders(myCooking)}
-        {selectStatus === 2 && renderOrders(myReady)}
-        {selectStatus === 3 && renderOrders(myFinished)}
+        {selectStatus === 0 && renderOrders(orders)}
+        {selectStatus === 1 && renderOrders(myCompleted)}
+        {/* {selectStatus === 2 && renderOrders(myReady)}
+        {selectStatus === 3 && renderOrders(myFinished)} */}
 
         {/* {orders.length === 0 && (
           <div className={styles.nomenu}>ยังไม่มีคำสั่งซื้อ</div>

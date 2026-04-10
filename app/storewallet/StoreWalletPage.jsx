@@ -6,19 +6,23 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import timeAgo from "@/lib/time_ago";
 import ModalSlip from "./ModalSlip";
+import ModalReq from "./ModalReq";
+import ModalOrder from "./ModalOrder";
 import Image from "next/image";
 //import { startTransition } from "react";
 
 export default function StoreWalletPage() {
   const [user, setUser] = useState(null);
   const [wallet, setWallet] = useState(null);
+  const [walletT, setWalletT] = useState(null);
   const [bank, setBank] = useState(null);
   const [storeId, setStoreId] = useState(null);
   const [editBank, setEditBank] = useState("");
   const [editName, setEditName] = useState("");
   const [editNumber, setEditNumber] = useState("");
-  const [editAmount, seteditAmount] = useState("");
+  const [editAmount, setEditAmount] = useState("");
 
+  const [uid, setUid] = useState(false);
   const [exchange, setExchange] = useState(null);
   const [approved, setApproved] = useState(null);
   const [exSel, setExSel] = useState(0);
@@ -26,6 +30,12 @@ export default function StoreWalletPage() {
 
   const [selectedApp, setSelectedApp] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [modalReq, setModalReq] = useState(false);
+
+  const [myOrders, setMyOrders] = useState(null);
+  const [modalOrder, setModalOrder] = useState(false);
+  const [selectOrder, setSelectOrder] = useState(null);
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -47,9 +57,16 @@ export default function StoreWalletPage() {
         .single();
       setWallet(wallet);
 
+      const { data: wallet_t } = await supabase
+        .from("wallet_transactions")
+        .select(
+          "*,orders(order_stores(store_total,orders_details(*,menus(name))))",
+        )
+        .eq("user_id", auth.user.id);
+      setWalletT(wallet_t);
       const { data: store } = await supabase
         .from("stores")
-        .select("id")
+        .select("id,name,user_id")
         .eq("user_id", auth.user.id)
         .single();
 
@@ -57,7 +74,7 @@ export default function StoreWalletPage() {
     }
     loadUser();
   }, []);
-
+  console.log(walletT);
   useEffect(() => {
     async function loadBank() {
       const { data: bank } = await supabase
@@ -91,7 +108,9 @@ export default function StoreWalletPage() {
     }
     loadExchange();
   }, [storeId]);
+
   console.log("exchange", exchange);
+
   async function handleRequest() {
     if (!editBank) {
       alert("กรุณาเลือกธนาคาร");
@@ -150,7 +169,7 @@ export default function StoreWalletPage() {
       alert("สร้างคำขอสำเร็จ");
       setEditBank("");
       setEditName("");
-      seteditAmount("");
+      setEditAmount("");
       setEditNumber("");
     }
   }
@@ -172,71 +191,65 @@ export default function StoreWalletPage() {
 
       <div className={styles.my_wallet}>
         <div className={styles.my_wallet_detail}>
-          <span>ยอดเงินที่ถอนได้ (Available Balance)</span>
-          <h3>฿{wallet?.balance}</h3>
+          <div className={styles.my_wallet_detail_left}>
+            <span className={styles.storename}>{storeId?.name}</span>
+            <div>
+              <b className={styles.uid} onClick={() => setUid((prev) => !prev)}>
+                UID
+              </b>
+              {uid && <span>{storeId?.user_id}</span>}
+            </div>
+          </div>
+          <div className={styles.my_wallet_detail_right}>
+            <span>ยอดเงินที่ถอนได้ (Available Balance)</span>
+            <h3>฿{wallet?.balance}</h3>
+            <button
+              onClick={() => setModalReq(true)}
+              className={styles.btn_withdraw}
+            >
+              ถอนเงิน
+            </button>
+          </div>
         </div>
       </div>
 
       <div className={styles.content}>
-        <div className={styles.request}>
-          <h3>📩 สร้างคำขอถอนเงิน</h3>
-          <div className={styles.request_bank}>
-            <span>ธนาคารปลายทาง</span>
-            <select
-              value={editBank}
-              onChange={(e) => setEditBank(e.target.value)}
-            >
-              <option value="">-- เลือกธนาคาร --</option>
-              {bank?.map((b) => (
-                <option key={b.id} value={b.id}>
-                  {b.name}
-                </option>
+        <div className={styles.income}>
+          <h3>⏱️ ประวัติการเงิน</h3>
+          <div className={styles.income_content}>
+            {walletT &&
+              walletT.map((wt) => (
+                <div
+                  key={wt.id}
+                  className={styles.income_card}
+                  onClick={() => {
+                    setSelectOrder(wt);
+                    setModalOrder(true);
+                  }}
+                >
+                  <div className={styles.income_card_left}>
+                    <b>Order #{wt.order_id}</b> <span>ประเภท : {wt.type}</span>{" "}
+                    <span>
+                      {" "}
+                      เวลา :
+                      <span style={{ opacity: "50%" }}>
+                        {" "}
+                        {new Date(wt.created_at).toLocaleString("th-TH", {
+                          dateStyle: "short",
+                          timeStyle: "short",
+                        })}
+                      </span>
+                    </span>
+                  </div>
+                  <div>
+                    <b className="price">+ ฿{wt.amount}</b>
+                  </div>
+                </div>
               ))}
-            </select>
           </div>
-          <div className={styles.request_bank_detail}>
-            <div>
-              <span>ชื่อบัญชี</span>
-              <input
-                type="text"
-                placeholder="ชื่อ-นามสกุล"
-                value={editName}
-                onChange={(e) => setEditName(e.target.value)}
-              />
-            </div>{" "}
-            <div>
-              <span>เลขที่บัญชี</span>
-              <input
-                type="text"
-                inputMode="numeric"
-                placeholder="กรอกเป็นตัวเลข"
-                value={editNumber}
-                onChange={(e) =>
-                  setEditNumber(e.target.value.replace(/\D/g, ""))
-                }
-              />
-            </div>
-          </div>
-          <div className={styles.request_amount}>
-            <span>จำนวนเงิน</span>
-            <input
-              type="number"
-              inputMode="numeric"
-              placeholder="ระบุจำนวนเงิน"
-              min="100"
-              value={editAmount}
-              onChange={(e) => seteditAmount(e.target.value)}
-            />
-          </div>
-          <div className={styles.request_amount_under}>
-            <span>ขั้นต่ำ 100 บาท</span>
-          </div>
-          <button onClick={handleRequest} className={styles.btn_req}>
-            ยืนยันคำขอ
-          </button>
         </div>
         <div className={styles.history}>
-          <h3>⏱️ ประวัติการเงิน</h3>
+          <h3>⏱️ คำขอแลกเงิน</h3>
           <div className={styles.history_select}>
             <button
               onClick={() => setExSel(0)}
@@ -281,6 +294,7 @@ export default function StoreWalletPage() {
                     setSelectedApp(app);
                     setShowModal(true);
                   }}
+                  style={{ cursor: "pointer" }}
                 >
                   <div>
                     <b>ถอนเข้า {app.bank.name}</b>
@@ -299,7 +313,31 @@ export default function StoreWalletPage() {
                   </div>{" "}
                 </div>
               ))}
-            {showModal && <ModalSlip setShowModal={setShowModal} app={selectedApp}/>}
+            {showModal && (
+              <ModalSlip setShowModal={setShowModal} app={selectedApp} />
+            )}
+            {modalReq && (
+              <ModalReq
+                setModalReq={setModalReq}
+                editBank={editBank}
+                setEditBank={setEditBank}
+                bank={bank}
+                editName={editName}
+                setEditName={setEditName}
+                editNumber={editNumber}
+                setEditNumber={setEditNumber}
+                editAmount={editAmount}
+                setEditAmount={setEditAmount}
+                handleRequest={handleRequest}
+              />
+            )}
+            {modalOrder && (
+              <ModalOrder
+                setModalOrder={setModalOrder}
+                selectOrder={selectOrder}
+                setSelectOrder={setSelectOrder}
+              />
+            )}
           </div>
         </div>
       </div>

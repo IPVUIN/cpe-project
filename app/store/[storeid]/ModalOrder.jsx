@@ -18,16 +18,34 @@ export default function ModalOrder({
   store,
 }) {
   const [mounted, setMounted] = useState(false);
-
+  const [selectedOptions, setSelectedOptions] = useState({});
   useEffect(() => {
     setMounted(true);
   }, []);
 
+  useEffect(() => {
+    if (!selectedMenu?.options_config) return;
+
+    const defaults = {};
+
+    selectedMenu.options_config.forEach((opt) => {
+      defaults[opt.name] = opt.default || opt.choices[0];
+    });
+
+    setSelectedOptions(defaults);
+  }, [selectedMenu]);
+  const basePrice = selectedMenu.price;
+  const extraPrice = Object.values(selectedOptions).reduce(
+    (sum, opt) => sum + (opt.price || 0),
+    0,
+  );
+  const finalPrice = basePrice + extraPrice;
+  console.log("f", selectedMenu.price);
   function count(value) {
     setCountAdd((prev) => prev + value);
   }
 
-  async function addToOrder(menu, qty, note) {
+  async function addToOrder(menu, qty, note, price, option) {
     const { data: orderCart, error: orderCartError } = await supabase
       .from("orders")
       .select("id")
@@ -47,7 +65,7 @@ export default function ModalOrder({
           user_id: user.id,
           //   store_id: store.id,
           status: "cart",
-          total_price: menu.price,
+          total_price: price,
         })
         .select("id")
         .single();
@@ -102,9 +120,10 @@ export default function ModalOrder({
         order_stores_id: orderStoreId,
         menu_id: menu.id,
         quantity: qty,
-        price: menu.price,
-        subtotal: menu.price * qty,
+        price: price,
+        subtotal: price * qty,
         note: note,
+        option: option,
       });
 
     if (detailError) {
@@ -128,11 +147,14 @@ export default function ModalOrder({
     // 7️⃣ update order total
     const { data: orderDetails } = await supabase
       .from("orders_details")
-      .select("subtotal, order_stores(order_id)")
+      .select(
+        `
+    subtotal,
+    order_stores!inner(order_id)
+  `,
+      )
       .eq("order_stores.order_id", orderId);
-
     const orderTotal = orderDetails.reduce((sum, row) => sum + row.subtotal, 0);
-
     await supabase
       .from("orders")
       .update({ total_price: orderTotal })
@@ -142,6 +164,12 @@ export default function ModalOrder({
     alert("เพิ่มเมนูสำเร็จ");
   }
 
+  function handleSelect(optionName, choice) {
+    setSelectedOptions((prev) => ({
+      ...prev,
+      [optionName]: choice, // เก็บทั้ง object
+    }));
+  }
   if (!mounted) return null;
 
   return (
@@ -153,6 +181,7 @@ export default function ModalOrder({
               setShowModal(false);
               setSelectedMenu(null);
               setCountAdd(1);
+              setNote("");
             }}
             className={styles.btnClose}
           >
@@ -163,6 +192,32 @@ export default function ModalOrder({
             <h3>{selectedMenu.name}</h3>
             <span>{selectedMenu.price} บาท</span>
           </div>
+          <hr />
+          {selectedMenu.options_config?.map((opt) => (
+            <div key={opt.name}>
+              <span>{opt.label}</span>
+              <br />
+
+              <div className={styles.choice}>
+                {opt.choices.map((c, i) => (
+                  <div className={styles.radio} key={`${opt.name}-${i}`}>
+                    {" "}
+                    <label >
+                      <input
+                        type="radio"
+                        name={opt.name}
+                        checked={selectedOptions[opt.name]?.label === c.label}
+                        onChange={() => handleSelect(opt.name, c)}
+                      />
+                      {c.label} {c.price > 0 && `(+${c.price}฿)`}
+                    </label>
+                  </div>
+                ))}
+              </div>
+
+              <hr />
+            </div>
+          ))}
 
           <div className={styles.modalDetailtext}>
             <textarea
@@ -184,7 +239,13 @@ export default function ModalOrder({
           </div>
           <button
             onClick={() => {
-              addToOrder(selectedMenu, countAdd, note);
+              addToOrder(
+                selectedMenu,
+                countAdd,
+                note,
+                finalPrice,
+                selectedOptions,
+              );
               //  setOpenModal(false);
             }}
             className={styles.btnadd}

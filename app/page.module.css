@@ -66,7 +66,9 @@
   flex-direction: column;
   justify-content: center;
 }
-
+.top_user span{
+  font-size: 16px;
+}
 .top_user h1 {
   margin-bottom: 10px;
 }
@@ -98,8 +100,8 @@
 }
 
 .search input {
-  padding: 10px 20px;
-  font-size: 18px;
+  padding: 10px 15px;
+  font-size: 14px;
   border: none;
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
