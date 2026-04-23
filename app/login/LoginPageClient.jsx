@@ -39,7 +39,21 @@ export default function LoginClient() {
 
     const role = roleData.role;
     console.log(role);
-  
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    const lineId = localStorage.getItem("lineId");
+    console.log(lineId);
+
+    if (lineId) {
+      await supabase
+        .from("users")
+        .update({ line_id: lineId })
+        .eq("id", user.id);
+      localStorage.removeItem("lineId");
+      alert("เชื่อม LINE สำเร็จ ✅");
+    }
     if (role === "customer") router.push("/");
     if (role === "store_owner") router.push("/HomeStore/");
     if (role === "admin") router.push("/adminstoremanage/");
