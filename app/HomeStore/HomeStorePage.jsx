@@ -69,8 +69,8 @@ export default function HomeStorePage() {
     async function loadOrders() {
       const { data: orders } = await supabase.from("order_stores").select(
         `
-    *,
-    orders(id,created_at,status,user_id),
+    *,stores(id,name),
+    orders(id,created_at,status,user_id,users(id,line_id)),
     orders_details(*,menus(*))
   `,
       );
@@ -108,6 +108,7 @@ export default function HomeStorePage() {
 
   console.log("order", myOrders);
   console.log("cooking", myCooking);
+console.log("ready", myReady);
   useEffect(() => {
     if (!dataStore) return;
 
@@ -187,8 +188,9 @@ export default function HomeStorePage() {
       const { data: wallet } = await supabase
         .from("wallet")
         .select("*")
-        .eq("user_id", orderData.orders.user_id)
-        .single();
+       .eq("user_id",orderData.orders.user_id)
+      .single();
+      
       const { error: walletUpdateErr } = await supabase
         .from("wallet")
         .update({
@@ -197,18 +199,34 @@ export default function HomeStorePage() {
         })
         .eq("user_id", orderData.orders.user_id);
 
-      // if (myCart) {
-      //   setOpenModal(false);
-      //   loadCart();
-      //   setModalStep("list");
-      // }
-      console.log("wallet", wallet);
+      if (myCart) {
+        setOpenModal(false);
+        loadCart();
+        setModalStep("list");
+      }
+   //   console.log("wallet", wallet);
+
     }
 
     if (newStatus === "ready") {
       setMyCooking((prev) => prev.filter((o) => o.id !== orderId));
 
       setMyReady((prev) => [{ ...orderData, status: newStatus }, ...prev]);
+
+      const lineId = orderData.orders.users.line_id;
+      // 3) send line
+      if (lineId) {
+        await fetch("/api/line/send", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: lineId,
+            message: `🍜 Order #${orderData.orders.id} จากร้าน${orderData.stores.name}พร้อมแล้ว มารับได้เลยครับ`,
+          }),
+        });
+      }
     }
 
     // if (newStatus === "finished") {
@@ -390,7 +408,10 @@ export default function HomeStorePage() {
                   + เพิ่มออเดอร์
                 </button>
               </div> */}
-              <Link href="/storereport" className={`${styles.statCard} ${styles.saleCard}`}>
+              <Link
+                href="/storereport"
+                className={`${styles.statCard} ${styles.saleCard}`}
+              >
                 <div className={styles.statIcon}>💰</div>
                 <div className={styles.statInfo}>
                   <span className={styles.statLabel}>ยอดขายวันนี้</span>
@@ -413,7 +434,9 @@ export default function HomeStorePage() {
                 <div className={`${styles.statIcon} pendingicon`}>📑</div>
                 <div className={styles.statInfo}>
                   <span className={styles.statLabel}>ออเดอร์ใหม่</span>
-                  <span className={styles.statValue}>{myOrders?.length || 0}</span>
+                  <span className={styles.statValue}>
+                    {myOrders?.length || 0}
+                  </span>
                 </div>
               </div>
 
@@ -424,7 +447,9 @@ export default function HomeStorePage() {
                 <div className={`${styles.statIcon} cookingicon`}>👨‍🍳</div>
                 <div className={styles.statInfo}>
                   <span className={styles.statLabel}>กำลังทำ</span>
-                  <span className={styles.statValue}>{myCooking?.length || 0}</span>
+                  <span className={styles.statValue}>
+                    {myCooking?.length || 0}
+                  </span>
                 </div>
               </div>
 
@@ -435,7 +460,9 @@ export default function HomeStorePage() {
                 <div className={`${styles.statIcon} readyicon`}>👨‍🍳</div>
                 <div className={styles.statInfo}>
                   <span className={styles.statLabel}>รอรับอาหาร</span>
-                  <span className={styles.statValue}>{myReady?.length || 0}</span>
+                  <span className={styles.statValue}>
+                    {myReady?.length || 0}
+                  </span>
                 </div>
               </div>
 
@@ -454,7 +481,6 @@ export default function HomeStorePage() {
             </div>
           </div>{" "}
         </div>{" "}
-
         <div className={styles.order_lists}>
           {!select && renderOrders(myOrders, "pending")}
           {select === 1 && renderOrders(myCooking, "cooking")}

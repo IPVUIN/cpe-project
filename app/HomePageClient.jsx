@@ -11,6 +11,7 @@ export default function Page({ stores, category }) {
   const [user, setUser] = useState(null);
   const [username, setUsername] = useState("");
   const [role, setRole] = useState("");
+  const [lineId, setLineId] = useState(null);
   const [balance, setBalance] = useState(0);
   const [cate, setCate] = useState(null);
   const [mounted, setMounted] = useState(false);
@@ -45,13 +46,14 @@ export default function Page({ stores, category }) {
       // ⭐ โหลดข้อมูลจากตาราง users
       const { data: userData, error } = await supabase
         .from("users")
-        .select("username, role")
+        .select("username, role,line_id")
         .eq("id", auth.user.id)
         .single();
 
       if (userData) {
         setUsername(userData.username);
         setRole(userData.role);
+        setLineId(userData.line_id);
       }
     }
 
@@ -82,6 +84,19 @@ export default function Page({ stores, category }) {
 
   const sortedStores = [...filteredStores].sort((a, b) => a.id - b.id);
 
+  async function testLine() {
+    await fetch("/api/line/send", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId: "U34b45183dad4fea8d5c5e480858cf4de",
+        message: "Test alarm",
+      }),
+    });
+  }
+  console.log("USER", user);
   if (!mounted) return null;
   return (
     <>
@@ -90,8 +105,35 @@ export default function Page({ stores, category }) {
           {user ? (
             <div className={styles.top_header}>
               <div className={styles.top_user}>
-                <h1>Hello, {username}</h1>
-                <span className={styles.top_under_user}>สั่งอะไรดี...</span>
+                <div className={styles.top_user_left}>
+                  <div>
+                    <h1>Hello, {username}</h1>
+                    <span className={styles.top_under_user}>สั่งอะไรดี...</span>
+                  </div>
+
+                  {!lineId ? (
+                    <div className={styles.line_banner}>
+                      <div>
+                        <h3>🔔 รับแจ้งเตือนออเดอร์ผ่าน LINE</h3>
+                        <p>เมื่ออาหารของคุณเสร็จ เราจะแจ้งเตือนทันที</p>
+                      </div>
+
+                      <button
+                        className={styles.line_btn}
+                        onClick={() =>
+                          window.open(
+                            "https://line.me/R/ti/p/@526ogsoy",
+                            "_blank",
+                          )
+                        }
+                      >
+                        เพิ่มเพื่อน LINE
+                      </button>
+                    </div>
+                  ) : (
+                    <div className={styles.connected}>✅ เชื่อม LINE แล้ว</div>
+                  )}
+                </div>
               </div>
 
               <div className={styles.top_wallet}>

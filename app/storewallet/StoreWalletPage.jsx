@@ -62,6 +62,7 @@ export default function StoreWalletPage() {
         .select(
           "*,orders(order_stores(store_total,orders_details(*,menus(name))))",
         )
+        .order("id", { ascending: false })
         .eq("user_id", auth.user.id);
       setWalletT(wallet_t);
       const { data: store } = await supabase
