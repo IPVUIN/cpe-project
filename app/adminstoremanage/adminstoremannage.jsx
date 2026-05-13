@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import Link from "next/link";
 
+import { createNewUserByAdmin } from "@/app/adminstoremanage/userActions"; 
+
 export default function AdminStoreManage({ stores: initialStores, category }) {
   const [stores, setStores] = useState(initialStores || []);
   const [searchTerm, setSearchTerm] = useState("");
@@ -13,17 +15,15 @@ export default function AdminStoreManage({ stores: initialStores, category }) {
   const [mounted, setMounted] = useState(false);
   const [user, setUser] = useState(null);
 
-  // States สำหรับ Modal และ Form
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isEditMode, setIsEditMode] = useState(false);
   
-  const [editId, setEditId] = useState(null);
-
   const [formData, setFormData] = useState({
     name: "",
     store_category: "",
     description: "",
-    user_id: "",
+    username: "",
+    email: "",
+    password: "",
   });
 
   const [imageFile, setImageFile] = useState(null);
@@ -37,18 +37,31 @@ export default function AdminStoreManage({ stores: initialStores, category }) {
   useEffect(() => {
     async function loadUser() {
       const { data: auth } = await supabase.auth.getUser();
-
-      const { data: profile } = await supabase
-        .from("users")
-        .select("*")
-        .eq("id", auth.user.id)
-        .single();
-      setUser(profile);
-
-
+      if (auth?.user) {
+        const { data: profile } = await supabase
+          .from("users")
+          .select("*")
+          .eq("id", auth.user.id)
+          .single();
+        setUser(profile);
+      }
     }
     loadUser();
-  }, []); 
+  }, []);
+
+  const handleAddClick = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setFormData({ 
+      name: "", store_category: "", description: "", 
+      username: "", email: "", password: "" 
+    });
+    setImageFile(null);
+    setPreviewUrl(null);
+  };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -58,72 +71,26 @@ export default function AdminStoreManage({ stores: initialStores, category }) {
     }
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setIsEditMode(false);
-    setEditId(null);
-    setFormData({ name: "", store_category: "", description: "", user_id: "" });
-    setImageFile(null);
-    setPreviewUrl(null);
-  };
-
-  const handleAddClick = () => {
-    setIsEditMode(false);
-    setEditId(null);
-    setIsModalOpen(true);
-  };
-
-  const handleEditClick = (store) => {
-    setIsEditMode(true);
-    setEditId(store.id);
-    setFormData({
-      name: store.name || "",
-      store_category: store.store_category || "",
-      description: store.description || "",
-      user_id: store.user_id || "",
-    });
-    setPreviewUrl(store.image_url || null); 
-    setIsModalOpen(true);
-  };
-
-  // ⭐️ ฟังก์ชันเปิด-ปิดร้านค้า (แทนที่การลบข้อมูล)
-const handleToggleStatus = async (id, currentStatus, name) => {
-    const newStatus = !currentStatus; // สลับค่า TRUE / FALSE
-    const actionText = newStatus ? "เปิดร้าน" : "ปิดร้าน";
-    
-    if (!confirm(`ยืนยันการ${actionText}: ${name}?`)) return;
-
-    // ลองแสดงค่าที่จะส่งไปดูใน Console (F12)
-    console.log(`กำลังอัปเดต ID: ${id} | สถานะใหม่: ${newStatus}`);
-
-    const { data, error } = await supabase
-      .from("stores")
-      .update({ is_active: newStatus })
-      .eq("id", id)
-      .select();
-
-    // เช็คผลลัพธ์ที่ได้กลับมาจาก Supabase
-    console.log("ผลลัพธ์จาก Supabase:", data, error);
-
-    if (error) {
-      alert(`ไม่สามารถ${actionText}ได้ (เกิดข้อผิดพลาด): ` + error.message);
-      console.error("Toggle Status Error:", error);
-    } else if (data && data.length > 0) {
-      // ✅ อัปเดตสำเร็จ (ต้องมี data กลับมาอย่างน้อย 1 ตัว)
-      setStores(stores.map((item) => (item?.id === id ? data[0] : item)));
-    } else {
-      // ❌ อัปเดตไม่สำเร็จ (ไม่มี Error แต่ไม่มีข้อมูลถูกแก้ไข)
-      alert(`อัปเดตไม่สำเร็จ! โปรดตรวจสอบสิทธิ์ RLS Policy (UPDATE) ใน Supabase`);
-      console.warn("ถูก Supabase บล็อก หรือหา ID ไม่เจอ (Data เป็น Array ว่าง)");
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setUploading(true);
-    
-    let finalImageUrl = isEditMode ? previewUrl : "";
+       
+    const userRes = await createNewUserByAdmin({
+      username: formData.username,
+      email: formData.email,
+      password: formData.password,
+      role: "store_owner", 
+    });
 
+    if (!userRes.success) {
+      alert("ไม่สามารถสร้างบัญชีเจ้าของร้านได้: " + userRes.error);
+      setUploading(false);
+      return;
+    }
+
+    const newOwnerId = userRes.userId; // ได้ ID ของเจ้าของร้านคนใหม่มาแล้ว
+
+    let finalImageUrl = "";
     if (imageFile) {
       const fileName = `${Date.now()}_${imageFile.name}`;
       const { data: uploadData, error: uploadError } = await supabase.storage
@@ -143,36 +110,24 @@ const handleToggleStatus = async (id, currentStatus, name) => {
     }
 
     const payload = { 
-      ...formData, 
+      name: formData.name,
+      store_category: formData.store_category,
+      description: formData.description,
       image_url: finalImageUrl,
-      user_id: formData.user_id || null
+      user_id: newOwnerId 
     };
 
-    if (isEditMode) {
-      const { data, error } = await supabase
-        .from("stores")
-        .update(payload)
-        .eq("id", editId)
-        .select();
+    const { data, error } = await supabase
+      .from("stores")
+      .insert([payload])
+      .select();
 
-      if (!error && data) {
-        setStores(stores.map(store => store?.id === editId ? data[0] : store));
-        closeModal();
-      } else {
-        alert("เกิดข้อผิดพลาดในการแก้ไข: " + error?.message);
-      }
+    if (!error && data) {
+      setStores([...stores, data[0]]);
+      closeModal();
+      alert("สร้างบัญชีผู้ใช้และร้านค้าสำเร็จเรียบร้อย!");
     } else {
-      const { data, error } = await supabase
-        .from("stores")
-        .insert([payload])
-        .select();
-
-      if (!error && data) {
-        setStores([...stores, data[0]]);
-        closeModal();
-      } else {
-        alert("เกิดข้อผิดพลาดในการบันทึก: " + error?.message);
-      }
+      alert("เกิดข้อผิดพลาดในการสร้างร้าน: " + error?.message);
     }
     
     setUploading(false);
@@ -181,10 +136,8 @@ const handleToggleStatus = async (id, currentStatus, name) => {
   const filteredStores = stores.filter((store) => {
     if (!store) return false;
     const safeName = store.name || "";
-    
     const matchSearch = safeName.toLowerCase().includes(searchTerm.toLowerCase());
     const matchCategory = cate ? store.store_category === cate : true;
-    
     return matchSearch && matchCategory;
   });
 
@@ -192,24 +145,19 @@ const handleToggleStatus = async (id, currentStatus, name) => {
   const sortedStores = [...filteredStores].sort((a, b) => a.id - b.id);
 
   if (!user) return <div>กำลังโหลด...</div>;
-
-  if (user.role !== "admin") {
-    return <div>ไม่มีสิทธิ์</div>;
-  }
+  if (user.role !== "admin") return <div>ไม่มีสิทธิ์</div>;
 
   return (
     <div className={styles.container}>
+      {/* --- ส่วน Header และส่วนแสดงการ์ดร้านค้ายังเหมือนเดิม --- */}
       <div className={styles.adminControlHeader}>
-        <div>
-          <h1 className={styles.title}>Store Management</h1>
-        </div>
-        <button onClick={handleAddClick} className={styles.addBtn}>
-          + เพิ่มร้านค้าใหม่
-        </button>
+        <div><h1 className={styles.title}>Store Management</h1></div>
+        <button onClick={handleAddClick} className={styles.addBtn}>+ เพิ่มร้านค้าใหม่</button>
       </div>
 
       <hr className={styles.divider} />
 
+      {/* ช่องค้นหา */}
       <div className={styles.top}>
         <div className={styles.search}>
           <input
@@ -219,26 +167,15 @@ const handleToggleStatus = async (id, currentStatus, name) => {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
-        
         <div className={styles.category}>
-          <button 
-            onClick={() => setCate(null)} 
-            className={cate === null ? styles.active : ""}
-          >
-            ทั้งหมด
-          </button>
+          <button onClick={() => setCate(null)} className={cate === null ? styles.active : ""}>ทั้งหมด</button>
           {category?.map((cat) => (
-            <button
-              key={cat.id}
-              onClick={() => setCate(cat.id)}
-              className={cate === cat.id ? styles.active : ""}
-            >
-              {cat.name}
-            </button>
+            <button key={cat.id} onClick={() => setCate(cat.id)} className={cate === cat.id ? styles.active : ""}>{cat.name}</button>
           ))}
         </div>
       </div>
 
+      {/* รายการร้านค้า */}
       <div className={styles.listshop}>
         {sortedStores.length > 0 ? (
           sortedStores.map((item) => (
@@ -246,40 +183,14 @@ const handleToggleStatus = async (id, currentStatus, name) => {
               <div className={styles.cardContent}>
                 <div className={styles.divimage}>
                   <Link href={"/AdminEditshop/" + item.id}>
-                  <Image
-                    src={item.image_url || "/miko.jpg"}
-                    fill
-                    alt="shopicon"
-                    className={styles.imagestore}
-                  />
+                    <Image src={item.image_url || "/miko.jpg"} fill alt="shopicon" className={styles.imagestore} />
                   </Link>
                   <div className={styles.idBadge}>ID: {item.id}</div>
-                  
-                  {/* ⭐️ ป้ายบอกสถานะ ถ้า is_active เป็น false ให้โชว์ว่าปิดร้าน ⭐️ */}
-                  {item.is_active === false && (
-                    <div className={styles.closedBadge}>ปิดร้าน</div>
-                  )}
+                  {item.is_active === false && <div className={styles.closedBadge}>ปิดร้าน</div>}
                 </div>
-
                 <div className={styles.textcard}>
                   <h3>{item.name || "ไม่มีชื่อร้าน"}</h3>
                   <p>{item.description || "ไม่มีคำอธิบายร้านค้า"}</p>
-                  
-                  <div className={styles.adminActions}>
-                    <button 
-                      onClick={() => handleEditClick(item)} 
-                      className={styles.editLink}
-                    >
-                      แก้ไข
-                    </button>
-                    {/* ⭐️ ปุ่มเปิด-ปิดร้าน สลับสีตามสถานะ ⭐️ */}
-                    <button 
-                      onClick={() => handleToggleStatus(item.id, item.is_active, item.name)}
-                      className={item.is_active ? styles.closeBtn : styles.openBtn}
-                    >
-                      {item.is_active ? "ปิดร้าน" : "เปิดร้าน"}
-                    </button>
-                  </div>
                 </div>
               </div>
             </div>
@@ -289,33 +200,27 @@ const handleToggleStatus = async (id, currentStatus, name) => {
         )}
       </div>
 
+      {/* หน้าต่าง Modal (อัปเดตฟอร์มรับข้อมูล) */}
       {isModalOpen && (
         <div className={styles.modalOverlay}>
           <div className={styles.modalContent}>
             <div className={styles.modalHeader}>
-              <h2>{isEditMode ? "แก้ไขข้อมูลร้านค้า" : "เพิ่มร้านค้าใหม่"}</h2>
+              <h2>เพิ่มร้านค้าใหม่</h2>
               <button type="button" className={styles.closeX} onClick={closeModal}>&times;</button>
             </div>
 
             <form onSubmit={handleSubmit} className={styles.modalForm}>
+              
+              {/* ข้อมูลร้านค้า */}
+              <h4 style={{ margin: "0 0 10px 0", color: "#f97316" }}>ข้อมูลร้านค้า</h4>
               <div className={styles.formGroup}>
                 <label>ชื่อร้าน</label>
-                <input 
-                  type="text" 
-                  required 
-                  placeholder="กรุณากรอกชื่อร้าน"
-                  value={formData.name}
-                  onChange={(e) => setFormData({...formData, name: e.target.value})}
-                />
+                <input type="text" required placeholder="กรุณากรอกชื่อร้าน" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} />
               </div>
 
               <div className={styles.formGroup}>
                 <label>หมวดหมู่</label>
-                <select 
-                  required
-                  value={formData.store_category}
-                  onChange={(e) => setFormData({...formData, store_category: e.target.value})}
-                >
+                <select required value={formData.store_category} onChange={(e) => setFormData({...formData, store_category: e.target.value})}>
                   <option value="">เลือกหมวดหมู่</option>
                   {category?.map(cat => (
                     <option key={cat.id} value={cat.id}>{cat.name}</option>
@@ -325,23 +230,29 @@ const handleToggleStatus = async (id, currentStatus, name) => {
 
               <div className={styles.formGroup}>
                 <label>คำอธิบาย/สโลแกน</label>
-                <input 
-                  type="text" 
-                  placeholder="สโลแกนร้านค้า"
-                  value={formData.description}
-                  onChange={(e) => setFormData({...formData, description: e.target.value})}
-                />
+                <input type="text" placeholder="สโลแกนร้านค้า" value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} />
+              </div>
+
+              <hr className={styles.divider} style={{ margin: "15px 0" }} />
+
+              {/* ข้อมูลสำหรับสมัครสมาชิกเจ้าของร้าน */}
+              <h4 style={{ margin: "0 0 10px 0", color: "#f97316" }}>ข้อมูลบัญชีเจ้าของร้าน</h4>
+              <div className={styles.formGroup}>
+                <label>ชื่อผู้ใช้งาน (Username)</label>
+                <input type="text" required placeholder="เช่น john_store" value={formData.username} onChange={(e) => setFormData({...formData, username: e.target.value})} />
               </div>
 
               <div className={styles.formGroup}>
-                <label>User ID (เจ้าของร้าน)</label>
-                <input 
-                  type="text" 
-                  placeholder="กรอก UUID ของเจ้าของร้าน"
-                  value={formData.user_id}
-                  onChange={(e) => setFormData({...formData, user_id: e.target.value})}
-                />
+                <label>อีเมล</label>
+                <input type="email" required placeholder="email@example.com" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} />
               </div>
+
+              <div className={styles.formGroup}>
+                <label>รหัสผ่าน</label>
+                <input type="password" required minLength="6" placeholder="รหัสผ่านอย่างน้อย 6 ตัวอักษร" value={formData.password} onChange={(e) => setFormData({...formData, password: e.target.value})} />
+              </div>
+
+              <hr className={styles.divider} style={{ margin: "15px 0" }} />
 
               <div className={styles.formGroup}>
                 <label>รูปภาพร้านค้า</label>
@@ -359,7 +270,7 @@ const handleToggleStatus = async (id, currentStatus, name) => {
                       <Image src={previewUrl} fill alt="preview" className={styles.previewImage} />
                       <div className={styles.previewOverlay}>
                         <label className={styles.viewBtn}>
-                          {isEditMode && !imageFile ? "เปลี่ยนรูปภาพ" : "ดูรูปภาพ"}
+                          เปลี่ยนรูปภาพ
                           <input type="file" accept="image/*" onChange={handleImageChange} hidden />
                         </label>
                       </div>
@@ -369,12 +280,10 @@ const handleToggleStatus = async (id, currentStatus, name) => {
               </div>
 
               <div className={styles.modalActions}>
-                <button type="button" className={styles.cancelBtn} onClick={closeModal}>
-                  ยกเลิก
-                </button>
+                <button type="button" className={styles.cancelBtn} onClick={closeModal}>ยกเลิก</button>
                 <button type="submit" className={styles.submitBtn} disabled={uploading}>
                   <span className={styles.saveIcon}>💾</span> 
-                  {uploading ? "กำลังบันทึก..." : (isEditMode ? "อัปเดตข้อมูล" : "บันทึกข้อมูล")}
+                  {uploading ? "กำลังบันทึก..." : "บันทึกข้อมูล"}
                 </button>
               </div>
             </form>

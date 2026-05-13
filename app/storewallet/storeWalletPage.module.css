@@ -258,3 +258,87 @@ flex-direction: column;
 .imagestore {
   object-fit: cover;
 }
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .content {
+    flex-direction: column;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .top h2 {
+    font-size: 24px;
+  }
+
+  .my_wallet {
+    padding: 20px;
+    border-radius: 18px;
+  }
+
+  .my_wallet_detail {
+    flex-direction: column;
+    gap: 25px;
+  }
+
+  .my_wallet_detail_right {
+    align-items: flex-start;
+  }
+
+  .my_wallet h3 {
+    font-size: 34px;
+  }
+
+  .storename {
+    font-size: 20px;
+  }
+
+  .btn_withdraw {
+    width: 100%;
+  }
+
+  .content {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .income,
+  .history {
+    padding: 15px;
+    border-radius: 18px;
+  }
+
+  .income_card,
+  .history_card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .history_card_right {
+    align-items: flex-start;
+  }
+
+  .history_select {
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .history_select::-webkit-scrollbar {
+    display: none;
+  }
+
+  .history_select button {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  .request_bank_detail {
+    flex-direction: column;
+  }
+
+  .divimage {
+    height: 220px;
+  }
+}

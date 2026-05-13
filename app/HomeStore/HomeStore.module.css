@@ -14,6 +14,29 @@
   align-items: center;
   justify-content: space-between;
 }
+.line_banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #eaffea;
+  border: 1px solid #00c300;
+  padding: 5px 16px;
+  border-radius: 12px;
+  gap: 15px;
+}
+
+.line_btn {
+  background: #00c300;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.line_btn:hover {
+  background: #2de62d;
+}
 .addorder {
   border: none;
   border-radius: 10px;
@@ -45,29 +68,29 @@
   padding: 7px 10px;
   border-radius: 20px;
   background: #ffffff;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.05);
   border: 1px solid transparent;
   transition: all 0.2s ease;
 }
 
 .statCard:hover {
   transform: translateY(-3px);
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.10);
   cursor: pointer;
 }
 .statCard.activepending {
   border: solid 1px #004085;
   background: linear-gradient(135deg, #eff6ff, #dbeafe);
 }
-.statCard.activecooking{
+.statCard.activecooking {
   border: solid 1px rgb(231, 129, 12);
- background: linear-gradient(135deg, #fff7ed, #ffedd5);
+  background: linear-gradient(135deg, #fff7ed, #ffedd5);
 }
 .statCard.activeready {
   border: solid 1px #21b897;
   background: linear-gradient(135deg, #eafffb, #c6fff3);
 }
-.statCard.activefinished{
+.statCard.activefinished {
   border: solid 1px #155724;
   background: linear-gradient(135deg, #f0fdf4, #dcfce7);
 }
@@ -97,7 +120,7 @@
 .statValue {
   margin: 0;
   font-size: 22px;
-  
+
   color: #0f172a;
   line-height: 1.1;
 }
@@ -110,7 +133,6 @@
 .saleCard .statIcon {
   background: #10b981;
 }
-
 
 .saleCard .statIcon,
 .pendingCard .statIcon,
@@ -177,21 +199,116 @@
   gap: 10px;
 }
 
-/* .modalOverlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  z-index: 999;
-  padding-top: 150px;
-} */
 @media screen and (min-width: 1700px) {
   .modalOverlay {
     padding-top: 200px;
+  }
+}
+/* Tablet */
+@media (max-width: 1024px) {
+  .top_head {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+  }
+
+  .top_head_left {
+    flex-wrap: wrap;
+  }
+
+  .top_status {
+    display: flex;
+    overflow-x: auto;
+    gap: 12px;
+
+    padding-bottom: 5px;
+
+    scrollbar-width: none;
+  }
+
+  .top_status::-webkit-scrollbar {
+    display: none;
+  }
+
+  .top_status .statCard {
+    flex: 0 0 auto;
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .top_head_left {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+  }
+
+  .divimage {
+    width: 100%;
+    height: 180px;
+  }
+
+  .line_banner {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 14px;
+    gap: 10px;
+  }
+
+  .line_banner h3 {
+    margin: 0 0 5px;
+    font-size: 16px;
+  }
+
+  .line_banner p {
+    margin: 0;
+    font-size: 13px;
+    color: gray;
+  }
+
+  .line_btn {
+    width: 100%;
+  }
+
+  .top_status {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .statCard {
+    padding: 12px;
+  }
+
+  .statIcon {
+    width: 46px;
+    height: 46px;
+    min-width: 46px;
+    font-size: 22px;
+  }
+
+  .statLabel {
+    font-size: 13px;
+  }
+
+  .statValue {
+    font-size: 20px;
+  }
+
+  .cardHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .menuItem {
+    gap: 10px;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .actions button {
+    width: 100%;
   }
 }
