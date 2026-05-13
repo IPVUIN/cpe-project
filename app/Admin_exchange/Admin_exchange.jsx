@@ -13,6 +13,28 @@ export default function ExchangeLog() {
 
   useEffect(() => {
     fetchData();
+
+    // สร้าง Channel เพื่อดักฟังการเปลี่ยนแปลงจากตาราง exchange_request
+    const channel = supabase
+      .channel("realtime-exchange-log")
+      .on(
+        "postgres_changes",
+        {
+          event: "*", // ดักฟังทุกเหตุการณ์ (INSERT, UPDATE, DELETE)
+          schema: "public",
+          table: "exchange_request",
+        },
+        (payload) => {
+          console.log("มีข้อมูลอัปเดตใหม่!", payload);
+          fetchData(); // เมื่อมีการเปลี่ยนแปลง ให้เรียกฟังก์ชันดึงข้อมูลใหม่ทันที
+        },
+      )
+      .subscribe();
+
+    // ล้างการเชื่อมต่อเมื่อเปลี่ยนหน้าหรือปิดหน้าต่างป้องกัน Memory Leak
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   useEffect(() => {
@@ -30,7 +52,9 @@ export default function ExchangeLog() {
   }, []);
 
   async function fetchData() {
-    setIsLoading(true);
+    if (exchangeData.length === 0) {
+      setIsLoading(true);
+    }
     try {
       const { data, error } = await supabase
         .from("exchange_request")
@@ -293,7 +317,9 @@ export default function ExchangeLog() {
         กำลังโหลดข้อมูล... ⏳
       </div>
     );
-
+  if (user.role !== "admin") {
+    return <div>ไม่มีสิทธิ์</div>;
+  }
   return (
     <div className={styles["page-container"]}>
       <div className={styles["content-wrapper"]}>

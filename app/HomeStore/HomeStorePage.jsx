@@ -370,6 +370,9 @@ export default function HomeStorePage() {
     });
   }
   if (!mounted) return <div className="nologin">กำลังโหลดข้อมูลร้าน...</div>;
+  if (user.role !== "store_owner") {
+    return <div>ไม่มีสิทธิ์</div>;
+  }
   return (
     <>
       <div>
