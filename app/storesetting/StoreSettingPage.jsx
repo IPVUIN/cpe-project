@@ -69,6 +69,8 @@ export default function StoreSettingPage() {
   //   console.log(dataStore);
   // console.log("cat", catSel);
   // console.log(menus);
+
+  
   return (
     <div>
       {dataStore && (

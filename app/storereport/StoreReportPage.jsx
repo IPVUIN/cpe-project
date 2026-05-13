@@ -245,6 +245,9 @@ export default function StoreReportPage() {
   }
 
   if (!mounted) return null;
+    if (user.role !== "store_owner") {
+    return <div>ไม่มีสิทธิ์</div>;
+  }
   return (
     <div className={styles.content}>
       <div className={styles.top}>
