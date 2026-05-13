@@ -228,7 +228,7 @@ export default function StoreReportPage() {
 
   if (!user) return <div>กำลังโหลด...</div>;
 
-  if (user.role !== "store_owner") {
+  if (user?.role !== "store_owner") {
     return <div>ไม่มีสิทธิ์เข้าถึงหน้านี้</div>;
   }
   console.log(selectTime);

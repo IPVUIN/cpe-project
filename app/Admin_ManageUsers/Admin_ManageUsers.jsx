@@ -127,7 +127,7 @@ export default function ManageUsers() {
   }
   if (!user) return <div>กำลังโหลด...</div>;
 
-  if (user.role !== "admin") {
+  if (user?.role !== "admin") {
     return <div>ไม่มีสิทธิ์</div>;
   }
   return (

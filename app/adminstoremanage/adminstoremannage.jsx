@@ -145,7 +145,7 @@ export default function AdminStoreManage({ stores: initialStores, category }) {
   const sortedStores = [...filteredStores].sort((a, b) => a.id - b.id);
 
   if (!user) return <div>กำลังโหลด...</div>;
-  if (user.role !== "admin") return <div>ไม่มีสิทธิ์</div>;
+  if (user?.role !== "admin") return <div>ไม่มีสิทธิ์</div>;
 
   return (
     <div className={styles.container}>
