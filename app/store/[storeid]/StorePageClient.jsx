@@ -237,10 +237,11 @@ export default function StorePageClient({ store, menus, menusCate }) {
                 <div
                   key={menu.id}
                   onClick={() => {
+                    if (!user) return;
                     setShowModal(true);
                     setSelectedMenu(menu);
                   }}
-                  style={{cursor:"pointer"}}
+                  style={{ cursor: "pointer" }}
                 >
                   <div className={styles.card}>
                     <div className={styles.cardimage}>
@@ -290,9 +291,11 @@ export default function StorePageClient({ store, menus, menusCate }) {
         <Link href="/" className={styles.back}>
           ⬅ กลับ
         </Link>
-        <Link href="/ordercart" className={styles.cart}>
-          🛒 My cart{" "}
-        </Link>
+        {user && (
+          <Link href="/ordercart" className={styles.cart}>
+            🛒 My cart{" "}
+          </Link>
+        )}
       </div>
 
       {showModal && (
