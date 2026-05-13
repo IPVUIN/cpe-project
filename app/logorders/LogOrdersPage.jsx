@@ -1,6 +1,6 @@
 "use client";
 
-import styles from "@/app/LogOrders/LogOrders.module.css";
+import styles from "@/app/logOrders/logOrders.module.css";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabaseClient";
