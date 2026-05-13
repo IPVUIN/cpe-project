@@ -14,7 +14,7 @@ export default function ModalReset({ email, setEmail, setShowForgot }) {
   }, []);
   const handleForgotPassword = async () => {
     const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: "http://localhost:3000/reset-password",
+      redirectTo: "https://ctpay-delta.vercel.app/reset-password",
     });
 
     console.log("data:", data);
