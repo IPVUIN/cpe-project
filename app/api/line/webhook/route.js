@@ -23,7 +23,7 @@ export async function POST(req) {
               type: "text",
               text:
                 "👋 ยินดีต้อนรับ!\nกดลิงก์เพื่อเชื่อมบัญชี 👇\n" +
-                `https://preumbonal-arla-coeducationally.ngrok-free.dev/link-line?lineId=${userId}`,
+                `https://ctpay-delta.vercel.app/link-line?lineId=${userId}`,
             },
           ],
         }),
