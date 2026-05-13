@@ -113,6 +113,8 @@ export default function StoreWalletPage() {
   console.log("exchange", exchange);
 
   async function handleRequest() {
+
+    
     if (!editBank) {
       alert("กรุณาเลือกธนาคาร");
       return;
@@ -135,10 +137,12 @@ export default function StoreWalletPage() {
       alert("ขั้นต่ำ 100 บาท");
       return;
     }
-    if (Number(editAmount) > wallet.balance) {
+    const available = Number(wallet.balance) - Number(wallet.reserved_balance || 0);
+    if (Number(editAmount) > available) {
       alert("ยอดไม่พอ");
       return;
     }
+    const amount = Number(editAmount);
     // if (Number(editAmount) > wallet.balance) {
     //   alert("เงินที่ไม่พอ");
     //   return;
@@ -163,6 +167,19 @@ export default function StoreWalletPage() {
     // console.log("INSERT", newReq);
     if (newReqError) {
       alert(newReqError.message);
+      return;
+    }
+
+    const { error: walletUpdateError } = await supabase
+      .from("wallet")
+      .update({
+        reserved_balance: Number(wallet.reserved_balance || 0) + amount,
+      })
+      .eq("user_id", user.id);
+
+    if (walletUpdateError) {
+      alert("ส่งคำขอแล้ว แต่กั๊กเงินไม่สำเร็จ");
+      console.log(walletUpdateError);
       return;
     }
     if (!newReqError) {
