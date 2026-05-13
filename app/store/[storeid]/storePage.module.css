@@ -162,15 +162,7 @@
   background-color: rgb(0, 93, 146);
 
 }
-/* .minus {
-  background-color: rgb(158, 0, 0);
-  margin-right: 7px;
-}
 
-.minus:hover {
-  background-color: rgb(129, 0, 0);
-  cursor: pointer;
-} */
 .bottom {
   display: flex;
   justify-content: flex-end;
@@ -242,4 +234,146 @@
   height: 300px;
   font-size: 26px;
   font-weight: bold;
+}
+
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .menu {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .top {
+    height: 220px;
+  }
+
+  .backshop {
+    top: 15px;
+    left: 15px;
+    width: 28px;
+    height: 28px;
+    padding: 8px;
+  }
+
+  .top_name {
+    width: calc(100% - 40px);
+    bottom: -55px;
+    padding: 12px 18px;
+    border-radius: 18px;
+  }
+
+  .top_name h2 {
+    font-size: 22px;
+  }
+
+  .top_name p {
+    font-size: 14px;
+  }
+
+  .category {
+    margin-top: 80px;
+    display: flex;
+    overflow-x: auto;
+    gap: 10px;
+    padding-bottom: 8px;
+    scrollbar-width: none;
+  }
+
+  .category::-webkit-scrollbar {
+    display: none;
+  }
+
+  .category button {
+    flex: 0 0 auto;
+    margin-right: 0;
+    white-space: nowrap;
+    font-size: 14px;
+  }
+
+  .menu {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .card {
+    height: auto;
+    max-height: none;
+    padding: 12px;
+  }
+
+  .cardimage {
+    width: 85px;
+    height: 85px;
+    flex: 0 0 85px;
+  }
+
+  .carddetail {
+    margin: 4px 12px;
+    min-width: 0;
+  }
+
+  .carddetail h4 {
+    font-size: 16px;
+  }
+
+  .carddetail span {
+    font-size: 13px;
+  }
+
+  .carddetail_price span {
+    font-size: 16px;
+  }
+
+  .bottom {
+    position: fixed;
+    bottom: 70px;
+    right: 15px;
+    z-index: 999;
+    margin: 0;
+    gap: 10px;
+  }
+
+  .back {
+    display: none;
+  }
+
+  .cart {
+    padding: 12px 14px;
+    border-radius: 999px;
+    font-size: 14px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+  }
+
+  .nomenu {
+    height: 200px;
+    font-size: 20px;
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+  .top {
+    height: 190px;
+  }
+
+  .top_name {
+    bottom: -60px;
+  }
+
+  .listmenu h2 {
+    font-size: 22px;
+  }
+
+  .cardimage {
+    width: 75px;
+    height: 75px;
+    flex-basis: 75px;
+  }
+
+  .carddetail h4 {
+    font-size: 15px;
+  }
 }

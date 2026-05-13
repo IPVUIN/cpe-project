@@ -18,3 +18,8 @@
   max-height: 90vh;
   overflow-y: auto;
 }
+@media (max-width: 480px) {
+  .modalBox{
+    width: 300px;
+  }
+}

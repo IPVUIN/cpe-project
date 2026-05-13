@@ -9,12 +9,14 @@ import { supabase } from "@/lib/supabaseClient";
 export default function OrderCartPageClient() {
   const [user, setUser] = useState(null);
   const [orders, setOrders] = useState(null);
- // const [myOrders, setMyOrders] = useState(null);
+  // const [myOrders, setMyOrders] = useState(null);
   const [myCooking, setMyCooking] = useState(null);
   const [myReady, setMyReady] = useState(null);
   const [myCompleted, setMyCompleted] = useState(null);
   // const [store, setStore] = useState(null);
   const [selectStatus, setSelectStatus] = useState(0);
+
+  const [lineId, setLineId] = useState(null);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -186,8 +188,29 @@ export default function OrderCartPageClient() {
   return (
     <div>
       <div className={styles.head}>
-        <h1>🍔 ออเดอร์ของฉัน</h1>
-        <span>รายการออเดอร์</span>
+        <div>
+          <h1>🍔 ออเดอร์ของฉัน</h1>
+          <span>รายการออเดอร์</span>
+        </div>
+        {!user.line_id ? (
+          <div className={styles.line_banner}>
+            <div>
+              <h3>🔔 รับแจ้งเตือนออเดอร์ผ่าน LINE</h3>
+              <p>เมื่ออาหารของคุณเสร็จ เราจะแจ้งเตือนทันที</p>
+            </div>
+
+            <button
+              className={styles.line_btn}
+              onClick={() =>
+                window.open("https://line.me/R/ti/p/@526ogsoy", "_blank")
+              }
+            >
+              เพิ่มเพื่อน LINE
+            </button>
+          </div>
+        ) : (
+          <div className={styles.connected}>✅ เชื่อม LINE แล้ว</div>
+        )}
       </div>
 
       <div className={styles.select}>

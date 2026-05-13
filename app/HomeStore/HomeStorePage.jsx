@@ -38,6 +38,7 @@ export default function HomeStorePage() {
   const [OrderTotal, setOrderTotal] = useState(0);
   const [countList, setCountList] = useState(0);
   const [myCart, setMyCart] = useState(null);
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -108,7 +109,7 @@ export default function HomeStorePage() {
 
   console.log("order", myOrders);
   console.log("cooking", myCooking);
-console.log("ready", myReady);
+  console.log("ready", myReady);
   useEffect(() => {
     if (!dataStore) return;
 
@@ -188,9 +189,9 @@ console.log("ready", myReady);
       const { data: wallet } = await supabase
         .from("wallet")
         .select("*")
-       .eq("user_id",orderData.orders.user_id)
-      .single();
-      
+        .eq("user_id", orderData.orders.user_id)
+        .single();
+
       const { error: walletUpdateErr } = await supabase
         .from("wallet")
         .update({
@@ -204,8 +205,7 @@ console.log("ready", myReady);
         loadCart();
         setModalStep("list");
       }
-   //   console.log("wallet", wallet);
-
+      //   console.log("wallet", wallet);
     }
 
     if (newStatus === "ready") {
@@ -396,6 +396,28 @@ console.log("ready", myReady);
                     {user?.username} - {user?.role}
                   </span>
                 </div>{" "}
+                {!user?.line_id ? (
+                  <div className={styles.line_banner}>
+                    <div>
+                      <h3>🔔 รับแจ้งเตือนออเดอร์ผ่าน LINE</h3>
+                      <p>เมื่ออาหารของคุณเสร็จ เราจะแจ้งเตือนทันที</p>
+                    </div>
+
+                    <button
+                      className={styles.line_btn}
+                      onClick={() =>
+                        window.open(
+                          "https://line.me/R/ti/p/@526ogsoy",
+                          "_blank",
+                        )
+                      }
+                    >
+                      เพิ่มเพื่อน LINE
+                    </button>
+                  </div>
+                ) : (
+                  <div className={styles.connected}>✅ เชื่อม LINE แล้ว</div>
+                )}
               </div>
               {/* <div>
                 <button

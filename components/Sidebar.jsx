@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 export default function Sidebar() {
   const [user, setUser] = useState(null);
@@ -24,6 +25,8 @@ export default function Sidebar() {
   //     }
   //   },
   // );
+  const pathname = usePathname();
+
   useEffect(() => {
     const { data: listener } = supabase.auth.onAuthStateChange(
       (event, session) => {
@@ -58,7 +61,9 @@ export default function Sidebar() {
     //setUser(null);
     router.push("/login");
   }
-
+  if (pathname === "/reset-password") {
+    return null; // ❌ ไม่ render sidebar
+  }
   return (
     <nav className={styles.nav}>
       <div className={styles.container}>
@@ -69,31 +74,71 @@ export default function Sidebar() {
         </div>
         <hr />
         <div className={styles.menu}>
-          {!user && <Link href="/">🍔 Home</Link>}
+          {!user && (
+            <Link href="/">
+              <span className={styles.icon}>🍔</span>
+              <span className={styles.text}>Home</span>
+            </Link>
+          )}
 
           {user && userRole?.role === "store_owner" && (
             <>
-              <Link href="/HomeStore">🍔 Home</Link>
-              <Link href="/storereport">📊 Report</Link>
-              <Link href="/storesetting">🏠 My store</Link>
-              <Link href="/storewallet">💸 Wallet & Withdraw</Link>
+              <Link href="/HomeStore">
+                <span className={styles.icon}>🍔</span>
+                <span className={styles.text}>Home</span>
+              </Link>
+
+              <Link href="/storereport">
+                <span className={styles.icon}>📊</span>
+                <span className={styles.text}>Report</span>
+              </Link>
+
+              <Link href="/storesetting">
+                <span className={styles.icon}>🏠</span>
+                <span className={styles.text}>My store</span>
+              </Link>
+
+              <Link href="/storewallet">
+                <span className={styles.icon}>💸</span>
+                <span className={styles.text}>Wallet & Withdraw</span>
+              </Link>
             </>
           )}
 
           {user && userRole?.role === "customer" && (
             <>
-              <Link href="/">🍔 Home</Link>
-              <Link href="/ordercart">🛒 Cart</Link>
-              <Link href="/orders">📃 Orders</Link>
-              <Link href="/wallet">💸 Wallet</Link>
+              <Link href="/">
+                <span className={styles.icon}>🍔</span>
+                <span className={styles.text}>Home</span>
+              </Link>
+              <Link href="/ordercart">
+                <span className={styles.icon}>🛒</span>
+                <span className={styles.text}>Cart</span>
+              </Link>
+              <Link href="/orders">
+                <span className={styles.icon}>📃</span>
+                <span className={styles.text}>Orders</span>
+              </Link>
+              <Link href="/wallet">
+                <span className={styles.icon}>💸</span>
+                <span className={styles.text}>Wallet</span>
+              </Link>
             </>
           )}
           {user && userRole?.role === "admin" && (
             <>
-              <Link href="/adminstoremanage">EditStore</Link>
-              <Link href="/Admin_exchange">Exchang</Link>
-              <Link href="/exchange_log">Exchang Log</Link>
-              <Link href="/Admin_ManageUsers">Users Manage</Link>
+              <Link href="/Admin_exchange">
+                <span className={styles.icon}>💸</span>
+                <span className={styles.text}>Exchang </span>
+              </Link>
+              <Link href="/exchange_log">
+                <span className={styles.icon}>📃</span>
+                <span className={styles.text}>Exchang Log</span>
+              </Link>
+              <Link href="/adminstoremanage">
+                <span className={styles.icon}>🏠</span>
+                <span className={styles.text}> EditStore</span>
+              </Link>
             </>
           )}
         </div>

@@ -5,13 +5,15 @@ import styles from "@/app/login/loginPage.module.css";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
-
+import ModalReset from "./ModalReset";
 //import { startTransition } from "react";
 
 export default function LoginClient() {
   const router = useRouter();
   const [error, setError] = useState("");
 
+  const [showForgot, setShowForgot] = useState(null);
+  const [email, setEmail] = useState("");
   async function handleSubmit(e) {
     //
     e.preventDefault();
@@ -54,10 +56,12 @@ export default function LoginClient() {
       localStorage.removeItem("lineId");
       alert("เชื่อม LINE สำเร็จ ✅");
     }
+
     if (role === "customer") router.push("/");
     if (role === "store_owner") router.push("/HomeStore/");
-    if (role === "admin") router.push("/adminstoremanage/");
+    if (role === "admin") router.push("/Admin_exchange/");
   }
+
 
   return (
     <>
@@ -87,17 +91,28 @@ export default function LoginClient() {
                 required
                 placeholder="กรอกรหัสผ่าน"
               />
-            </div>
 
+              <button
+                type="button"
+                className={styles.forgotPassword}
+                onClick={() => setShowForgot(true)}
+              >
+                ลืมรหัสผ่าน?
+              </button>
+            </div>
             {error && <p style={{ color: "red" }}>{error}</p>}
 
-            <button type="submit">Login!</button>
+            <button type="submit" className={styles.btnlogin}>
+              Login!
+            </button>
           </form>
           <div className={styles.regis}>
             <Link href="/login/register">Register</Link>
           </div>
         </div>
       </div>
+
+      {showForgot && <ModalReset email={email} setEmail={setEmail} setShowForgot={setShowForgot}/>}
     </>
   );
 }

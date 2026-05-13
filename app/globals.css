@@ -60,7 +60,7 @@ textarea {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 200px 0;
+  /* height: 100vh; */
 }
 .pending {
   color: #004085;
@@ -180,4 +180,11 @@ hr{
   border-radius: 8px;
   margin-top: 4px;
   width: fit-content;
+}
+
+@media (max-width: 768px) {
+  .marginsidebar {
+    margin-left: 0;
+    padding-bottom: 80px;
+  }
 }

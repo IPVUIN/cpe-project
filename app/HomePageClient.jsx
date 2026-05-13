@@ -11,7 +11,6 @@ export default function Page({ stores, category }) {
   const [user, setUser] = useState(null);
   const [username, setUsername] = useState("");
   const [role, setRole] = useState("");
-  const [lineId, setLineId] = useState(null);
   const [balance, setBalance] = useState(0);
   const [cate, setCate] = useState(null);
   const [mounted, setMounted] = useState(false);
@@ -46,14 +45,13 @@ export default function Page({ stores, category }) {
       // ⭐ โหลดข้อมูลจากตาราง users
       const { data: userData, error } = await supabase
         .from("users")
-        .select("username, role,line_id")
+        .select("username, role")
         .eq("id", auth.user.id)
         .single();
 
       if (userData) {
         setUsername(userData.username);
         setRole(userData.role);
-        setLineId(userData.line_id);
       }
     }
 
@@ -110,29 +108,6 @@ export default function Page({ stores, category }) {
                     <h1>Hello, {username}</h1>
                     <span className={styles.top_under_user}>สั่งอะไรดี...</span>
                   </div>
-
-                  {!lineId ? (
-                    <div className={styles.line_banner}>
-                      <div>
-                        <h3>🔔 รับแจ้งเตือนออเดอร์ผ่าน LINE</h3>
-                        <p>เมื่ออาหารของคุณเสร็จ เราจะแจ้งเตือนทันที</p>
-                      </div>
-
-                      <button
-                        className={styles.line_btn}
-                        onClick={() =>
-                          window.open(
-                            "https://line.me/R/ti/p/@526ogsoy",
-                            "_blank",
-                          )
-                        }
-                      >
-                        เพิ่มเพื่อน LINE
-                      </button>
-                    </div>
-                  ) : (
-                    <div className={styles.connected}>✅ เชื่อม LINE แล้ว</div>
-                  )}
                 </div>
               </div>
 

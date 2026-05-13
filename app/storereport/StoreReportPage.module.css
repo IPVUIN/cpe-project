@@ -156,3 +156,88 @@ box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 .topsell_card_right b {
   color: rgb(0, 182, 82);
 }
+
+/* Mobile */
+@media (max-width: 768px) {
+  .top h2 {
+    font-size: 24px;
+  }
+
+  .filterday {
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .filterday::-webkit-scrollbar {
+    display: none;
+  }
+
+  .filterday button,
+  .customdate {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  .selectdate {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .selectdate input {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .stat {
+    flex-direction: column;
+  }
+
+  .stat div {
+    padding: 15px;
+  }
+
+  .stat div b {
+    font-size: 24px;
+  }
+
+  .topsell_card {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+    padding: 15px;
+  }
+
+  .topsell_card_left {
+    width: 100%;
+  }
+
+  .topsell_card_left h3 {
+    margin-right: 12px;
+    width: 25px;
+    height: 25px;
+    font-size: 16px;
+  }
+
+  .topsell_card_left_text {
+    min-width: 0;
+  }
+
+  .topsell_card_left_text b {
+    font-size: 15px;
+  }
+
+  .topsell_card_left_text span {
+    font-size: 13px;
+  }
+
+  .topsell_card_right {
+    align-items: flex-end;
+  }
+
+  .divimage {
+    width: 55px;
+    height: 55px;
+    flex: 0 0 55px;
+  }
+}

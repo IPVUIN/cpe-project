@@ -9,6 +9,34 @@
 .head span {
   color: gray;
 }
+.head{
+  display: flex;
+  gap:20px;
+  align-items: center;
+}
+.line_banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #eaffea;
+  border: 1px solid #00c300;
+  padding: 5px 16px;
+  border-radius: 12px;
+  gap: 15px;
+}
+
+.line_btn {
+  background: #00c300;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.line_btn:hover {
+background: #2de62d;
+}
 .select {
   background-color: #eaedf0;
   display: flex;
@@ -145,3 +173,23 @@
   text-decoration: underline;
 }
 
+@media (max-width: 768px) {
+  .head {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .line_banner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .line_btn {
+    width: 100%;
+  }
+
+  .connected {
+    text-align: center;
+  }
+}
