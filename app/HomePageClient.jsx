@@ -82,18 +82,7 @@ export default function Page({ stores, category }) {
 
   const sortedStores = [...filteredStores].sort((a, b) => a.id - b.id);
 
-  async function testLine() {
-    await fetch("/api/line/send", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        userId: "U34b45183dad4fea8d5c5e480858cf4de",
-        message: "Test alarm",
-      }),
-    });
-  }
+
   console.log("USER", user);
   if (!mounted) return null;
   return (
