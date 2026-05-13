@@ -128,10 +128,10 @@ export default function ExchangeLog() {
       if (status === "approved") {
         const { data: walletData, error: walletError } = await supabase
           .from("wallet")
-          .select("balance")
+          .select("balance,reserved_balance")
           .eq("user_id", userId)
           .maybeSingle();
-
+console.log("walletData:", walletData);
         if (walletError) throw walletError;
 
         if (!walletData) {
@@ -151,6 +151,8 @@ export default function ExchangeLog() {
           .from("wallet")
           .update({
             balance: Number(walletData.balance) - Number(exData.amount),
+            reserved_balance:
+              Number(walletData.reserved_balance) - Number(exData.amount),
           })
           .eq("user_id", userId);
 

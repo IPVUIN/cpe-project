@@ -7,7 +7,7 @@ export async function POST(req) {
 
       console.log("NEW USER:", userId);
 
-      // 👇 เก็บไว้ก่อน
+  
 
       // ส่งลิงก์ให้ user ไปเชื่อมบัญชี
       await fetch("https://api.line.me/v2/bot/message/push", {
