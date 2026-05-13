@@ -65,47 +65,67 @@ export default function HomeStorePage() {
     loadUser();
   }, []);
 
-  useEffect(() => {
-    if (!dataStore) return;
-    async function loadOrders() {
-      const { data: orders } = await supabase.from("order_stores").select(
-        `
+  async function loadOrders() {
+    const { data: orders } = await supabase.from("order_stores").select(
+      `
     *,stores(id,name),
     orders(id,created_at,status,user_id,users(id,line_id)),
     orders_details(*,menus(*))
   `,
-      );
-      const sortedOrders = orders?.sort(
-        (a, b) =>
-          new Date(b.orders?.created_at) - new Date(a.orders?.created_at),
-      );
-      //  .eq("store_id", dataStore.id);
+    );
+    const sortedOrders = orders?.sort(
+      (a, b) => new Date(b.orders?.created_at) - new Date(a.orders?.created_at),
+    );
+    //  .eq("store_id", dataStore.id);
 
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      const { data } = await supabase
-        .from("order_stores")
-        .select(
-          `
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const { data } = await supabase
+      .from("order_stores")
+      .select(
+        `
     store_total,
     orders!inner(created_at,status)
   `,
-        )
-        .eq("store_id", dataStore.id)
-        .eq("orders.status", "completed")
-        .gte("orders.created_at", today.toISOString());
-      console.log("data", data);
-      const total = data?.reduce((sum, o) => sum + o.store_total, 0) || 0;
-      setTotalSales(total);
-      //setMyCart(orders.filter((o) => o.status === "cart"));
-      setMyOrders(sortedOrders.filter((o) => o.status === "pending"));
-      setMyCooking(sortedOrders.filter((o) => o.status === "cooking"));
-      setMyReady(sortedOrders.filter((o) => o.status === "ready"));
-      setMyFinished(sortedOrders.filter((o) => o.status === "finished"));
-    }
+      )
+      .eq("store_id", dataStore?.id)
+      .eq("orders.status", "completed")
+      .gte("orders.created_at", today.toISOString());
+    console.log("data", data);
+    const total = data?.reduce((sum, o) => sum + o.store_total, 0) || 0;
+    setTotalSales(total);
+    //setMyCart(orders.filter((o) => o.status === "cart"));
+    setMyOrders(sortedOrders.filter((o) => o.status === "pending"));
+    setMyCooking(sortedOrders.filter((o) => o.status === "cooking"));
+    setMyReady(sortedOrders.filter((o) => o.status === "ready"));
+    setMyFinished(sortedOrders.filter((o) => o.status === "finished"));
+  }
+  useEffect(() => {
+    if (!dataStore) return;
+
     loadOrders();
+
+    const channel = supabase
+      .channel("store-orders-realtime")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "order_stores",
+          filter: `store_id=eq.${dataStore.id}`,
+        },
+        (payload) => {
+          console.log("Realtime order:", payload);
+          loadOrders();
+        },
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [dataStore]);
-  //console.log("dataStore", dataStore?.user_id);
 
   console.log("order", myOrders);
   console.log("cooking", myCooking);
