@@ -179,7 +179,7 @@ export default function StoreWalletPage() {
   // console.log(typeof Number(editNumber));
   if (!user) return <div>กำลังโหลด...</div>;
 
-  if (user.role !== "store_owner") {
+  if (user?.role !== "store_owner") {
     return <div>ไม่มีสิทธิ์</div>;
   }
   if (!mounted) return null;

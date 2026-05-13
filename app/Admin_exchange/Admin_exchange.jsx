@@ -317,7 +317,7 @@ export default function ExchangeLog() {
         กำลังโหลดข้อมูล... ⏳
       </div>
     );
-  if (user.role !== "admin") {
+  if (user?.role !== "admin") {
     return <div>ไม่มีสิทธิ์</div>;
   }
   return (
