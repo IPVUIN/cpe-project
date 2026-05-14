@@ -29,24 +29,39 @@ export async function checkout(userId, orderId, totalPrice, router) {
 
   router.push("/orders");
 
-  const { data: owner_store } = await supabase
-    .from("order_stores")
-    .select(`stores(users(line_id))`)
-    .eq("order_id", orderId)
-    .single();
-  // console.log("owner_store", owner_store.stores.user_id);
-  const lineId = owner_store.stores.users.line_id;
-  console.log(lineId);
-  if (lineId) {
-    await fetch("/api/line/send", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        userId: lineId,
-        message: `มีออเดอร์เข้ามาใหม่ !!!`,
-      }),
-    });
-  }
+const { data: owner_stores, error } = await supabase
+  .from("order_stores")
+  .select(`
+    id,
+    stores(
+      users(line_id)
+    )
+  `)
+  .eq("order_id", orderId);
+
+if (error) {
+  console.log(error);
+  return;
+}
+
+const lineIds = [
+  ...new Set(
+    owner_stores
+      .map((item) => item.stores?.users?.line_id)
+      .filter(Boolean)
+  ),
+];
+
+for (const lineId of lineIds) {
+  await fetch("/api/line/send", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      userId: lineId,
+      message: "มีออเดอร์เข้ามาใหม่ !!!",
+    }),
+  });
+}
 }
