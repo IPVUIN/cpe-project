@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import styles from "@/app/ordercart/orderCartPage.module.css";
 import { useState, useEffect } from "react";
+import { useCart } from "@/contexts/CartContext";
 export default function CartControl({
   supabase,
   item,
@@ -13,7 +14,7 @@ export default function CartControl({
 }) {
   //   const [countMenu, setCountMenu] = useState(item.quantity);
   //   const [subMenu, setSubMenu] = useState(item.subtotal);
-
+  const { setCartCount } = useCart();
   async function updateQty(id, qty, price, storeId, delta) {
     const newQty = qty + delta;
     const newSubtotal = newQty * price;
@@ -69,6 +70,8 @@ export default function CartControl({
       .from("orders")
       .update({ total_price: newOrderTotal })
       .eq("id", ordersCart.id);
+
+    setCartCount((prev) => prev + delta);
   }
 
   async function removeItem(id) {
@@ -130,6 +133,8 @@ export default function CartControl({
       .from("orders")
       .update({ total_price: newOrderTotal })
       .eq("id", ordersCart.id);
+
+    setCartCount((prev) => prev - 1);
   }
 
   return (
@@ -137,11 +142,14 @@ export default function CartControl({
       <div className={styles.menuRow}>
         {/* LEFT */}
         <div className={styles.menuInfo}>
-          <p className={styles.name}>{item.menus?.name} {item.note && <span className="note">{item.note}</span>}</p>
+          <p className={styles.name}>
+            {item.menus?.name}{" "}
+            {item.note && <span className="note">{item.note}</span>}
+          </p>
           {item.option &&
             Object.values(item.option).map((opt, i) => (
               <span key={i} className="option">
-                {opt.label === "ไม่เพิ่ม" ? "": `- ${opt.label}`}  
+                {opt.label === "ไม่เพิ่ม" ? "" : `- ${opt.label}`}
               </span>
             ))}{" "}
           <span className={styles.sub}>฿{item.price}</span>
@@ -169,10 +177,12 @@ export default function CartControl({
               </button>
             ) : (
               <button
-                onClick={() => removeItem(item.id)}
-                className={styles.trash}
+                onClick={() =>
+                  confirm("ต้องการลบรายการนี้ใช่ไหม?") && removeItem(item.id)
+                }
+                className={styles.minus}
               >
-                🗑
+                -
               </button>
             )}
 

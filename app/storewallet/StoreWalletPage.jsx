@@ -113,8 +113,6 @@ export default function StoreWalletPage() {
   console.log("exchange", exchange);
 
   async function handleRequest() {
-
-    
     if (!editBank) {
       alert("กรุณาเลือกธนาคาร");
       return;
@@ -133,11 +131,8 @@ export default function StoreWalletPage() {
       alert("กรุณากรอกจำนวนเงิน");
       return;
     }
-    if (Number(editAmount) < 100) {
-      alert("ขั้นต่ำ 100 บาท");
-      return;
-    }
-    const available = Number(wallet.balance) - Number(wallet.reserved_balance || 0);
+    const available =
+      Number(wallet.balance) - Number(wallet.reserved_balance || 0);
     if (Number(editAmount) > available) {
       alert("ยอดไม่พอ");
       return;
@@ -189,6 +184,7 @@ export default function StoreWalletPage() {
       setEditName("");
       setEditAmount("");
       setEditNumber("");
+      setModalReq(false);
     }
   }
   console.log("exSel", exSel);
@@ -232,7 +228,7 @@ export default function StoreWalletPage() {
       </div>
 
       <div className={styles.content}>
-        <div className={styles.income}>
+        {/* <div className={styles.income}>
           <h3>⏱️ ประวัติการเงิน</h3>
           <div className={styles.income_content}>
             {walletT &&
@@ -265,7 +261,7 @@ export default function StoreWalletPage() {
                 </div>
               ))}
           </div>
-        </div>
+        </div> */}
         <div className={styles.history}>
           <h3>⏱️ คำขอแลกเงิน</h3>
           <div className={styles.history_select}>
@@ -322,6 +318,9 @@ export default function StoreWalletPage() {
                         timeStyle: "short",
                       })}
                     </span>
+                    <small className={styles.click_text}>
+                      กดเพื่อดูรายละเอียด
+                    </small>
                   </div>
                   <div className={styles.history_card_right}>
                     <b>฿{app.amount}</b>

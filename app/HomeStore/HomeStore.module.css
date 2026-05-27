@@ -199,6 +199,10 @@
   gap: 10px;
 }
 
+ .status{
+    padding: 5px;
+    border-radius: 10px;
+  }
 @media screen and (min-width: 1700px) {
   .modalOverlay {
     padding-top: 200px;

@@ -24,6 +24,8 @@ export default function StoreReportPage() {
   const [topMenu, setTopMenu] = useState(null);
   const [mounted, setMounted] = useState(false);
 
+  const [orderCard, setOrderCard] = useState(null);
+  const [openOrders, setOpenOrders] = useState({});
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -48,86 +50,6 @@ export default function StoreReportPage() {
     }
     loadUser();
   }, []);
-
-  // useEffect(() => {
-  //   async function loadReports() {
-  //     if (!store?.id) return;
-  //     setLoading(true);
-
-  //     const today = new Date();
-  //     today.setHours(0, 0, 0, 0);
-
-  //     const sevenDaysAgo = new Date();
-  //     sevenDaysAgo.setDate(today.getDate() - 6); // รวมวันนี้ด้วย
-  //     sevenDaysAgo.setHours(0, 0, 0, 0);
-  //     const firstDayOfMonth = new Date(
-  //       today.getFullYear(),
-  //       today.getMonth(),
-  //       1,
-  //     );
-
-  //     const { data: ordersToday } = await supabase
-  //       .from("orders")
-  //       .select("total_price")
-  //       .eq("store_id", store.id)
-  //       .eq("status", "finished")
-  //       .gte("created_at", today.toISOString());
-
-  //     const totalSales = ordersToday.reduce(
-  //       (sum, order) => sum + order.total_price,
-  //       0,
-  //     );
-
-  //     const { count } = await supabase
-  //       .from("orders")
-  //       .select("id", { count: "exact", head: true })
-  //       .eq("store_id", store.id)
-  //       .eq("status", "finished")
-  //       .gte("created_at", today.toISOString());
-
-  //     const { data: sevenOrders } = await supabase
-  //       .from("orders")
-  //       .select("total_price")
-  //       .eq("store_id", store.id)
-  //       .eq("status", "finished")
-  //       .gte("created_at", sevenDaysAgo.toISOString());
-  //     const sevenSales =
-  //       sevenOrders?.reduce((sum, o) => sum + o.total_price, 0) || 0;
-
-  //     const { count: countSeven } = await supabase
-  //       .from("orders")
-  //       .select("id", { count: "exact", head: true })
-  //       .eq("store_id", store.id)
-  //       .eq("status", "finished")
-  //       .gte("created_at", sevenDaysAgo.toISOString());
-
-  //     const { data: monthOrders } = await supabase
-  //       .from("orders")
-  //       .select("total_price")
-  //       .eq("store_id", store.id)
-  //       .eq("status", "finished")
-  //       .gte("created_at", firstDayOfMonth.toISOString());
-  //     const monthSales =
-  //       monthOrders?.reduce((sum, o) => sum + o.total_price, 0) || 0;
-
-  //     const { count: countMonth } = await supabase
-  //       .from("orders")
-  //       .select("id", { count: "exact", head: true })
-  //       .eq("store_id", store.id)
-  //       .eq("status", "finished")
-  //       .gte("created_at", firstDayOfMonth.toISOString());
-
-  //     setOrdersCount(count);
-  //     setOrdersCountSeven(countSeven);
-  //     setOrdersCountMonth(countMonth);
-  //     setOrdersToday(totalSales);
-  //     setOrdersSeven(sevenSales);
-  //     setOrdersMonth(monthSales);
-  //     setLoading(false);
-  //   }
-
-  //   loadReports();
-  // }, [store]);
 
   useEffect(() => {
     if (!store?.id) return;
@@ -168,9 +90,15 @@ export default function StoreReportPage() {
           end = new Date(endDate);
           end.setHours(23, 59, 59, 999);
           break;
+
+        case 4:
+          // ทั้งหมด
+          start = null;
+          end = null;
+          break;
       }
 
-      const { data, count } = await supabase
+      let query = supabase
         .from("order_stores")
         .select(
           `
@@ -181,11 +109,19 @@ export default function StoreReportPage() {
           { count: "exact" },
         )
         .eq("store_id", store.id)
-        .eq("status", "finished")
-        .gte("orders.created_at", start.toISOString())
-        .lte("orders.created_at", end.toISOString());
+        .eq("status", "finished");
+
+      if (start && end) {
+        query = query
+          .gte("orders.created_at", start.toISOString())
+          .lte("orders.created_at", end.toISOString());
+      }
+
+      const { data, count, error } = await query;
       const total = data?.reduce((sum, o) => sum + o.store_total, 0) || 0;
 
+      setOrderCard(data);
+      console.log("data", data);
       setTotalSales(total);
       setOrdersCount(count);
       setTopMenu(data);
@@ -213,9 +149,7 @@ export default function StoreReportPage() {
       const result = Object.values(menuSummary);
 
       console.log("result", result);
-      const sorted = result
-        .sort((a, b) => b.total_qty - a.total_qty)
-        .slice(0, 5);
+      const sorted = result.sort((a, b) => b.total_qty - a.total_qty);
 
       setTopMenu(sorted);
       setLoading(false);
@@ -239,13 +173,15 @@ export default function StoreReportPage() {
       return "7 วันล่าสุด";
     } else if (sel === 2) {
       return "เดือนนี้";
-    } else {
+    } else if (sel === 3) {
       return "ช่วงที่กำหนด";
+    } else {
+      return "ทั้งหมด";
     }
   }
 
   if (!mounted) return null;
-    if (user.role !== "store_owner") {
+  if (user.role !== "store_owner") {
     return <div>ไม่มีสิทธิ์</div>;
   }
   return (
@@ -297,6 +233,12 @@ export default function StoreReportPage() {
             </div>
           )}{" "}
         </div>
+        <button
+          onClick={() => setSelectTime(4)}
+          className={selectTime === 4 ? styles.active : ""}
+        >
+          ทั้งหมด
+        </button>
       </div>
       <div className={styles.stat}>
         <div className={styles.stat_sales}>
@@ -315,41 +257,107 @@ export default function StoreReportPage() {
       {/* <div>sale charts</div> */}
       <div className={styles.topsell}>
         <h3>🌟 เมนูที่ขายดีที่สุดของ {getTextDayType(selectTime)}</h3>
-        <div className={styles.topsell_list}>
-          {topMenu?.map((tm, idx) => (
-            <div key={tm.id} className={styles.topsell_card}>
-              <div className={styles.topsell_card_left}>
-                <h3
-                  className={
-                    idx + 1 === 1
-                      ? styles.firstMenu
-                      : idx + 1 === 2
-                        ? styles.secondMenu
-                        : idx + 1 === 3
-                          ? styles.thirdMenu
-                          : ""
-                  }
-                >
-                  #{idx + 1}
-                </h3>
-                <div className={styles.divimage}>
-                  <Image
-                    src={tm.img || "/iconmain.png"}
-                    fill
-                    alt="bgshop"
-                    className={styles.imagemenu}
-                  />
-                </div>{" "}
-                <div className={styles.topsell_card_left_text}>
-                  <b>{tm.name}</b> <span>ขายได้จำนวน {tm.total_qty} จาน</span>
-                </div>
-              </div>
-              <div className={styles.topsell_card_right}>
-                <span>ได้ราคาทั้งหมด</span>
-                <b>฿{tm.total_sales}</b>
-              </div>
+        <div className={styles.dashboardGrid}>
+          {/* ซ้าย */}
+          <div className={styles.leftSection}>
+            <div className={styles.orderList}>
+              {orderCard?.map((order) => {
+                const isOpen = openOrders[order.orders.id];
+
+                return (
+                  <div key={order.orders.id} className={styles.orderCard}>
+                    <div
+                      className={styles.orderHeader}
+                      onClick={() =>
+                        setOpenOrders((prev) => ({
+                          ...prev,
+                          [order.orders.id]: !prev[order.orders.id],
+                        }))
+                      }
+                    >
+                      <div>
+                        <b>Order #{order.orders.id}</b>
+                        <span>
+                          {new Date(order.orders.created_at).toLocaleString(
+                            "th-TH",
+                            {
+                              dateStyle: "short",
+                              timeStyle: "short",
+                            },
+                          )}
+                        </span>
+                      </div>
+
+                      <div className={styles.orderRight}>
+                        <strong>฿{order.store_total}</strong>
+                        <span>{isOpen ? "▲" : "▼"}</span>
+                      </div>
+                    </div>
+
+                    {isOpen && (
+                      <div className={styles.orderItems}>
+                        {order.orders_details?.map((item) => (
+                          <div key={item.id} className={styles.orderItem}>
+                            <div>
+                              <span>- </span>
+                              <b>{item.menus?.name}</b>{" "}
+                              <span>จำนวน {item.quantity} จาน</span>
+                            </div>
+
+                            <span>฿{item.subtotal}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
-          ))}
+          </div>
+
+          {/* ขวา */}
+          <div className={styles.rightSection}>
+            <div className={styles.topsell_list}>
+              {topMenu?.map((tm, idx) => (
+                <div key={tm.id} className={styles.topsell_card}>
+                  <div className={styles.topsell_card_left}>
+                    <h3
+                      className={
+                        idx + 1 === 1
+                          ? styles.firstMenu
+                          : idx + 1 === 2
+                            ? styles.secondMenu
+                            : idx + 1 === 3
+                              ? styles.thirdMenu
+                              : ""
+                      }
+                    >
+                      #{idx + 1}
+                    </h3>
+
+                    <div className={styles.divimage}>
+                      <Image
+                        src={tm.img || "/iconmain.png"}
+                        fill
+                        alt="bgshop"
+                        className={styles.imagemenu}
+                      />
+                    </div>
+
+                    <div className={styles.topsell_card_left_text}>
+                      <b>{tm.name}</b>
+                      <span>ขายได้จำนวน {tm.total_qty} จาน</span>
+                    </div>
+                  </div>
+
+                  <div className={styles.topsell_card_right}>
+                    <span>ได้ราคาทั้งหมด</span>
+                    <b>฿{tm.total_sales}</b>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </div>

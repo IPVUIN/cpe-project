@@ -184,14 +184,15 @@
 .qtyControl button {
   width: 28px;
   height: 28px;
-  border-radius: 50%;
+  border-radius: 20%;
   border: none;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: 0.2s;
-  font-weight: bold;
+  font-size: 26px;
+  background: #ddd;
 }
 
 /* STATES */
@@ -200,26 +201,20 @@
 }
 
 .minus:hover {
-  background: #bbb;
+ background: #d9363e;
+   color: white;
 }
 
 .add {
   background: #0070f3;
-  color: white;
 }
 
 .add:hover {
   background: #0059c1;
+   color: white;
 }
 
-.trash {
-  background: #ff4d4f;
-  color: white;
-}
 
-.trash:hover {
-  background: #d9363e;
-}
 
 /* QTY */
 .qty {

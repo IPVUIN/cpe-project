@@ -96,6 +96,9 @@
   background-color: rgb(1, 138, 202);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
+.textCount{
+  color: rgb(0, 173, 253);
+}
 /* Mobile */
 @media (max-width: 768px) {
   .nav {

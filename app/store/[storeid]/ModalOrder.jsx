@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Modal from "@/components/Modal/Modal";
 import Image from "next/image";
 import styles from "./ModalOrder.module.css";
-
+import { useCart } from "@/contexts/CartContext";
 export default function ModalOrder({
   setShowModal,
   selectedMenu,
@@ -19,6 +19,7 @@ export default function ModalOrder({
 }) {
   const [mounted, setMounted] = useState(false);
   const [selectedOptions, setSelectedOptions] = useState({});
+  const { setCartCount } = useCart();
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -162,6 +163,8 @@ export default function ModalOrder({
 
     console.log("เพิ่มเมนูสำเร็จ");
     alert("เพิ่มเมนูสำเร็จ");
+    setShowModal(false);
+    setCartCount((prev) => prev + qty);
   }
 
   function handleSelect(optionName, choice) {
@@ -170,7 +173,9 @@ export default function ModalOrder({
       [optionName]: choice, // เก็บทั้ง object
     }));
   }
+  
   if (!mounted) return null;
+
 
   return (
     <Modal>
@@ -190,7 +195,7 @@ export default function ModalOrder({
 
           <div className={styles.modalDetailhead}>
             <h3>{selectedMenu.name}</h3>
-            <span>{selectedMenu.price} บาท</span>
+            <span>{finalPrice} บาท</span>
           </div>
           <hr />
           {selectedMenu.options_config?.map((opt) => (
@@ -209,7 +214,7 @@ export default function ModalOrder({
                         checked={selectedOptions[opt.name]?.label === c.label}
                         onChange={() => handleSelect(opt.name, c)}
                       />
-                      {c.label} {c.price > 0 && `(+${c.price}฿)`}
+                      {c.label} {c.price > 0 && `+${c.price}฿`}
                     </label>
                   </div>
                 ))}
