@@ -28,6 +28,7 @@
 }
 .modalDetailhead span {
   color: rgb(0, 207, 104);
+  font-weight: bold;
 }
 
 .modalDetailtext {
@@ -79,7 +80,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
+  font-size: 26px;
 }
 .modalMark button:hover {
   background-color: #e2e2e2;

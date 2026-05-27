@@ -7,8 +7,9 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
-
+import { useCart } from "@/contexts/CartContext";
 export default function Sidebar() {
+  const { cartCount } = useCart();
   const [user, setUser] = useState(null);
   const router = useRouter();
   const [userRole, setUserRole] = useState(null);
@@ -113,7 +114,8 @@ export default function Sidebar() {
               </Link>
               <Link href="/ordercart">
                 <span className={styles.icon}>🛒</span>
-                <span className={styles.text}>Cart</span>
+                <span className={styles.text}>Cart </span>
+                <span className={styles.textCount}>({cartCount})</span>
               </Link>
               <Link href="/orders">
                 <span className={styles.icon}>📃</span>

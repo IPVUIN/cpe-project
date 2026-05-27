@@ -157,7 +157,92 @@ box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   color: rgb(0, 182, 82);
 }
 
+
+.dashboardGrid {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+  align-items: flex-start;
+}
+
+.leftSection {
+  flex: 1;
+  min-width: 0;
+  
+}
+
+.rightSection {
+  width: 420px;
+  flex-shrink: 0;
+}
+
+.orderList {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.orderCard {
+  background: white;
+  border-radius: 5px;
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+}
+
+.orderHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  cursor: pointer;
+}
+
+.orderHeader:hover {
+  background: #f8fafc;
+}
+
+.orderHeader div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.orderHeader span {
+  font-size: 13px;
+  color: #64748b;
+}
+
+.orderRight {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.orderRight strong {
+  color: #16a34a;
+  font-size: 20px;
+}
+
+.arrow {
+  font-size: 14px;
+}
+
+.orderItems {
+  border-top: 1px solid #eef2f7;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.orderItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 /* Mobile */
+
+
 @media (max-width: 768px) {
   .top h2 {
     font-size: 24px;

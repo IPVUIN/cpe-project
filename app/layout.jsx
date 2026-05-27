@@ -2,7 +2,7 @@ import { Prompt, Roboto } from "next/font/google";
 import "./globals.css";
 import Sidebar from "@/components/Sidebar";
 import Footer from "@/components/Footer";
-
+import { CartProvider } from "@/contexts/CartContext";
 const fontItim = Prompt({
   variable: "--font-prompt",
   subsets: ["latin"],
@@ -24,13 +24,15 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${fontItim.variable} ${fontRoboto.variable}`}>
       <body className={`antialiased `}>
-        <div style={{}}>
-          <Sidebar />
-          <div className="marginsidebar">
-            <div className="container pageFade">{children}</div>
-            {/* <Footer /> */}
+        <CartProvider>
+          <div>
+            <Sidebar />
+
+            <div className="marginsidebar">
+              <div className="container pageFade">{children}</div>
+            </div>
           </div>
-        </div>
+        </CartProvider>
       </body>
     </html>
   );

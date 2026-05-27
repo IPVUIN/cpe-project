@@ -66,20 +66,27 @@ export default function HomeStorePage() {
   }, []);
 
   async function loadOrders() {
-    const { data: orders } = await supabase.from("order_stores").select(
-      `
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const { data: orders } = await supabase
+      .from("order_stores")
+      .select(
+        `
     *,stores(id,name),
-    orders(id,created_at,status,user_id,users(id,line_id)),
+    orders!inner(id,created_at,status,user_id,users(id,line_id)),
     orders_details(*,menus(*))
   `,
-    );
+      )
+      .eq("store_id", dataStore?.id)
+      .gte("orders.created_at", today.toISOString())
+      .lt("orders.created_at", tomorrow.toISOString());
     const sortedOrders = orders?.sort(
       (a, b) => new Date(b.orders?.created_at) - new Date(a.orders?.created_at),
     );
     //  .eq("store_id", dataStore.id);
-
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
     const { data } = await supabase
       .from("order_stores")
       .select(
@@ -89,8 +96,9 @@ export default function HomeStorePage() {
   `,
       )
       .eq("store_id", dataStore?.id)
-      .eq("orders.status", "completed")
-      .gte("orders.created_at", today.toISOString());
+      .eq("status", "finished")
+      .gte("orders.created_at", today.toISOString())
+      .lt("orders.created_at", tomorrow.toISOString());
     console.log("data", data);
     const total = data?.reduce((sum, o) => sum + o.store_total, 0) || 0;
     setTotalSales(total);
@@ -187,7 +195,7 @@ export default function HomeStorePage() {
       alert(error.message);
       return;
     }
-
+    const lineId = orderData.orders.users.line_id;
     if (newStatus === "cancel") {
       setMyOrders((prev) => prev.filter((o) => o.id !== orderId));
       const { data: wallet } = await supabase
@@ -201,6 +209,19 @@ export default function HomeStorePage() {
           reserved_balance: wallet.reserved_balance - orderData.store_total,
         })
         .eq("user_id", orderData.orders.user_id);
+
+      if (lineId) {
+        await fetch("/api/line/send", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: lineId,
+            message: `⚠️ ร้าน${orderData.stores.name}ยกเลิกออเดอร์!`,
+          }),
+        });
+      }
     }
     if (newStatus === "cooking") {
       //console.log("test")
@@ -226,6 +247,21 @@ export default function HomeStorePage() {
         setModalStep("list");
       }
       //   console.log("wallet", wallet);
+
+      // 3) send line
+      if (lineId) {
+        await fetch("/api/line/send", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: lineId,
+            message: `🍜 ร้าน${orderData.stores.name}รับออเดอร์แล้ว
+            💸 ชำระเงินจำนวน ${orderData.store_total} บาท `,
+          }),
+        });
+      }
     }
 
     if (newStatus === "ready") {
@@ -233,7 +269,6 @@ export default function HomeStorePage() {
 
       setMyReady((prev) => [{ ...orderData, status: newStatus }, ...prev]);
 
-      const lineId = orderData.orders.users.line_id;
       // 3) send line
       if (lineId) {
         await fetch("/api/line/send", {
@@ -287,7 +322,9 @@ export default function HomeStorePage() {
               </span>
             </div>
 
-            <span>{oc.status}</span>
+            <span className={`${oc.status}bg ${styles.status}`}>
+              {oc.status}
+            </span>
           </div>
 
           {/* 🔹 รายการอาหาร */}

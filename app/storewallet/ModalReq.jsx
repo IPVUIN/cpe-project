@@ -75,13 +75,13 @@ export default function ModalReq({
             type="text"
             inputMode="numeric"
             placeholder="ระบุจำนวนเงิน"
-            min="100"
+
             value={editAmount}
             onChange={(e) => setEditAmount(e.target.value.replace(/\D/g, ""))}
           />
         </div>
         <div className={styles.request_amount_under}>
-          <span>ขั้นต่ำ 100 บาท</span>
+
         </div>
         <button onClick={handleRequest} className={styles.btn_req}>
           ยืนยันคำขอ
