@@ -128,7 +128,10 @@ export default function Sidebar() {
             </>
           )}
           {user && userRole?.role === "admin" && (
-            <>
+              <><Link href="/Admin_Dashboard">
+                <span className={styles.icon}>📊</span>
+                <span className={styles.text}>Dashboard </span>
+              </Link>
               <Link href="/Admin_exchange">
                 <span className={styles.icon}>💸</span>
                 <span className={styles.text}>Exchang </span>
