@@ -4,7 +4,6 @@
   min-height: 100vh;
   background-color: #F8FAFC;
   padding: 1.5rem;
-
 }
 
 .content-wrapper {
@@ -271,4 +270,121 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* =========================================
+   🌟 Custom Popup Modal (เพิ่มเติมส่วนรายละเอียด)
+   ========================================= */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(15, 23, 42, 0.5); 
+  backdrop-filter: blur(2px); 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999; 
+  padding: 1rem;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 1.5rem;
+  border-radius: 1.5rem;
+  width: 100%;
+  max-width: 380px; /* ขยายให้กว้างขึ้นนิดนึงรองรับข้อความ */
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  animation: modalPop 0.2s ease-out forwards;
+}
+
+@keyframes modalPop {
+  0% { transform: scale(0.95) translateY(10px); opacity: 0; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+.modal-title {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: #1e293b;
+}
+
+.modal-message {
+  margin: 0 0 1rem 0;
+  color: #64748b;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+/* 🌟 กล่องแสดงรายละเอียดใน Popup */
+.modal-details {
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  text-align: left;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.detail-row strong {
+  color: #1e293b;
+  font-size: 0.95rem;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.btn-modal-cancel {
+  flex: 1;
+  padding: 0.875rem;
+  border-radius: 1rem;
+  border: 2px solid #e2e8f0;
+  background: #fff;
+  font-weight: bold;
+  font-size: 0.875rem;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-modal-cancel:hover { background: #f8fafc; color: #1e293b; border-color: #cbd5e1; }
+
+.btn-modal-confirm {
+  flex: 1;
+  padding: 0.875rem;
+  border-radius: 1rem;
+  border: none;
+  font-weight: bold;
+  font-size: 0.875rem;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-modal-approve { background: #10b981; }
+.btn-modal-approve:hover:not(:disabled) { background: #059669; }
+
+.btn-modal-reject { background: #f43f5e; }
+.btn-modal-reject:hover:not(:disabled) { background: #e11d48; }
+
+.btn-modal-confirm:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
